@@ -9,5 +9,6 @@ public class IntruderMultiTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		ExtraModuleNames.Add("IntruderMulti");
-	}
+        bUsesSteam = true;
+    }
 }
