@@ -3,3 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine.h"
+#include "UnrealNetwork.h"
+#include "Online.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(IntruderDebug, Verbose, All);

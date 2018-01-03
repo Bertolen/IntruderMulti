@@ -32,6 +32,8 @@ AGuard::AGuard(const FObjectInitializer& ObjectInitializer)
 
 void AGuard::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
 

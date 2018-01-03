@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class IntruderMultiTarget : TargetRules
 {
-	public IntruderMultiTarget(TargetInfo Target) : base(Target)
-	{
-		Type = TargetType.Game;
-		ExtraModuleNames.Add("IntruderMulti");
+    public IntruderMultiTarget(TargetInfo Target) : base(Target)
+    {
+        Type = TargetType.Game;
+        ExtraModuleNames.Add("IntruderMulti");
         bUsesSteam = true;
     }
 }

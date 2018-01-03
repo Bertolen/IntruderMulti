@@ -5,3 +5,5 @@
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, IntruderMulti, "IntruderMulti" );
  
+
+DEFINE_LOG_CATEGORY(IntruderDebug);
