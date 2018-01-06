@@ -45,6 +45,9 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "Hability")
 	virtual void Use();
 
+	UFUNCTION()
+	virtual void ShowGameplayMenu();
+
 protected:
 	// maximum distance at which the character can use an item
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hability", meta = (AllowPrivateAccess = "true"))

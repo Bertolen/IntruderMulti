@@ -2,6 +2,7 @@
 
 #include "BaseCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "IntruderMulti/PlayerController/GameplayPC.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -62,6 +63,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	// Bind special actions
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &ABaseCharacter::Use);
 
+	// Bind UI action
+	PlayerInputComponent->BindAction("ShowInGameMenu", IE_Pressed, this, &ABaseCharacter::ShowGameplayMenu);
 }
 
 void ABaseCharacter::MoveForward(float Value)
@@ -128,4 +131,14 @@ void ABaseCharacter::Use()
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Use - End"));
+}
+
+void ABaseCharacter::ShowGameplayMenu()
+{
+	AGameplayPC* GameplayPC = Cast<AGameplayPC>(GetController());
+	if (!GameplayPC) {
+		return;
+	}
+
+	GameplayPC->ShowMenuWindow();
 }

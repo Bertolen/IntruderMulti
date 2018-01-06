@@ -38,6 +38,9 @@ public:
 	UFUNCTION(Client, Reliable)
 		void SetupChatWindow();
 
+	UFUNCTION()
+		void ShowMenuWindow();
+
 	UFUNCTION(Client, Reliable)
 		void UpdateChat(const FText & SenderName, const FText & SenderText);
 
@@ -57,6 +60,12 @@ protected:
 	UPROPERTY()
 		class UGameplayChat* GameplayChatWB;
 
+	UPROPERTY()
+		class UGameplayMenu* GameplayMenuWB;
+
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
 		TSubclassOf<class UGameplayChat> GameplayChatClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
+		TSubclassOf<class UGameplayMenu> GameplayMenuClass;
 };

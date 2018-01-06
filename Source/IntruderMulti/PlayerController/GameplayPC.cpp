@@ -4,7 +4,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/UMG/Public/Blueprint/WidgetLayoutLibrary.h"
 #include "IntruderMulti/GameMode/GameplayGM.h"
-#include "IntruderMulti/UI/AllLevels/GameplayChat.h"
+#include "IntruderMulti/UI/Gameplay/GameplayChat.h"
+#include "IntruderMulti/UI/Gameplay/GameplayMenu.h"
 
 AGameplayPC::AGameplayPC(const FObjectInitializer & ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -145,6 +146,38 @@ void AGameplayPC::SetupChatWindow_Implementation()
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("SetupChatWindow_Implementation - End"));
+}
+
+void AGameplayPC::ShowMenuWindow()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("ShowMenuWindow - Begin"));
+
+	if (GameplayMenuClass != nullptr) { // check if our widget class exists, else we'll crash
+		if (GameplayMenuWB == nullptr) { // init the widget
+			GameplayMenuWB = CreateWidget<UGameplayMenu>(GetWorld(), GameplayMenuClass);
+			GameplayMenuWB->AddToViewport();
+		}
+
+		// Show our widget
+		GameplayMenuWB->SetVisibility(ESlateVisibility::Visible);
+
+		// The mouse movement will no longer control the camera
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		InputMode.SetWidgetToFocus(GameplayMenuWB->GetCachedWidget());
+		InputMode.SetHideCursorDuringCapture(true);
+		SetInputMode(InputMode);
+
+		// Centers the mouse position
+		UGameUserSettings* GameSettings = UGameUserSettings::GetGameUserSettings();
+		FIntPoint ScreenResolution = GameSettings->GetScreenResolution();
+		SetMouseLocation(ScreenResolution.X / 2, ScreenResolution.Y / 2);
+
+		// Show the cursor
+		bShowMouseCursor = true;
+	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("ShowMenuWindow - End"));
 }
 
 void AGameplayPC::UpdateChat_Implementation(const FText &  SenderName, const FText &  SenderText)
