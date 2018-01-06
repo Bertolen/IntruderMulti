@@ -44,6 +44,9 @@ void AGameplayPC::BeginPlay()
 		}
 
 		PassCharacterInfoToServer(PlayerSettings);
+
+		FInputModeGameOnly InputMode;
+		SetInputMode(InputMode);
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("BeginPlay - End"));

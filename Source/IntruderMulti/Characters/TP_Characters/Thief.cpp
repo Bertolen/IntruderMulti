@@ -9,6 +9,8 @@
 AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - Begin"));
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -27,12 +29,16 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	CameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	GetCameraComponent()->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	GetCameraComponent()->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	// are set in the derived blueprint asset (to avoid direct content references in C++)
+
+	// Init some values
+	UsingReach += CameraBoom->TargetArmLength;
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - End"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,13 +50,10 @@ void AThief::SetupPlayerInputComponent(class UInputComponent* PlayerInputCompone
 
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AThief::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AThief::MoveRight);
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
 void AThief::MoveForward(float Value)
