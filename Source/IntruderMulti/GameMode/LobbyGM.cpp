@@ -15,16 +15,6 @@ ALobbyGM::ALobbyGM(const FObjectInitializer & ObjectInitializer)
 	bReplicates = true;
 	bUseSeamlessTravel = true;
 
-	TakenCharacters.Add(false); // 0
-	TakenCharacters.Add(false); // 1
-	TakenCharacters.Add(false); // 2
-	TakenCharacters.Add(false); // 3
-	TakenCharacters.Add(false); // 4
-	TakenCharacters.Add(false); // 5
-	TakenCharacters.Add(false); // 6
-	TakenCharacters.Add(false); // 7
-	TakenCharacters.Add(false); // 8
-
 	PlayerControllerClass = ALobbyPC::StaticClass();
 }
 
@@ -35,7 +25,6 @@ void ALobbyGM::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifet
 	DOREPLIFETIME(ALobbyGM, AllPlayerControllers);
 	DOREPLIFETIME(ALobbyGM, CurrentPlayers);
 	DOREPLIFETIME(ALobbyGM, ConnectedPlayers);
-	DOREPLIFETIME(ALobbyGM, TakenCharacters);
 	DOREPLIFETIME(ALobbyGM, Characters);
 }
 
@@ -115,9 +104,14 @@ void ALobbyGM::EveryoneUpdate_Implementation()
 		return;
 	}
 
+	ALobbyGS* LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
+	if (!LobbyGS) {
+		return;
+	}
+
 	// Updates the ConnectedPlayers array and checks if the game can start
 	ConnectedPlayers.Empty();
-	CanWeStart = true;
+	LobbyGS->SetCanWeStart(true);
 	for (int i = 0; i < AllPlayerControllers.Num() ; i++)
 	{
 		ALobbyPC * LobbyPC = Cast<ALobbyPC>(AllPlayerControllers[i]);
@@ -126,11 +120,11 @@ void ALobbyGM::EveryoneUpdate_Implementation()
 			LobbyPC->UpdateNumberOfPlayers(CurrentPlayers, MaxPlayers);
 
 			if (LobbyPC->PlayerSettings.MyPlayerStatus == EPlayerStatus::NotReady) { // if at least one player is not ready then we can't start the game
-				CanWeStart = false;
+				LobbyGS->SetCanWeStart(false);
 			} 
 			else if (LobbyPC->PlayerSettings.MyPlayerStatus == EPlayerStatus::Host) { // If the host has yet to select a character then we can't start the game
 				if (!LobbyPC->PlayerSettings.MyPlayerCharacter || LobbyPC->PlayerSettings.MyPlayerCharacter == DefaultPawnClass) {
-					CanWeStart = false;
+					LobbyGS->SetCanWeStart(false);
 				}
 			}
 		}
@@ -142,7 +136,7 @@ void ALobbyGM::EveryoneUpdate_Implementation()
 		ALobbyPC * LobbyPC = Cast<ALobbyPC>(AllPlayerControllers[i]);
 		if (LobbyPC) {
 			LobbyPC->AddPlayerInfo(ConnectedPlayers);
-			LobbyPC->UpdateTakenCharacters(TakenCharacters);
+			LobbyPC->UpdateTakenCharacters();
 			AddToKickList();
 		}
 	}
@@ -158,6 +152,7 @@ bool ALobbyGM::ServerUpdateGameSettings_Validate(int MapID, int TimeID)
 void ALobbyGM::ServerUpdateGameSettings_Implementation(int MapID, int TimeID)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("ServerUpdateGameSettings_Implementation - Begin"));
+
 	ALobbyGS* LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
 	if (!LobbyGS) {
 		return;
@@ -172,6 +167,7 @@ void ALobbyGM::ServerUpdateGameSettings_Implementation(int MapID, int TimeID)
 			lobbyPC->UpdateLobbySettings();
 		}
 	}
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("ServerUpdateGameSettings_Implementation - End"));
 }
 
@@ -216,6 +212,7 @@ void ALobbyGM::YouHaveBeenKicked_Implementation(int PlayerID)
 void ALobbyGM::Logout(AController* Exiting)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("Logout - Begin"));
+
 	Super::Logout(Exiting);
 
 	int i;
@@ -226,18 +223,24 @@ void ALobbyGM::Logout(AController* Exiting)
 		}
 	}
 
-	ALobbyPC * lobbyPC = Cast<ALobbyPC>(AllPlayerControllers[i]);
-	if (!lobbyPC) {
+	ALobbyPC * LobbyPC = Cast<ALobbyPC>(AllPlayerControllers[i]);
+	if (!LobbyPC) {
+		return;
+	}
+
+	ALobbyGS * LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
+	if (!LobbyGS) {
 		return;
 	}
 
 	// Frees the character that was taken
-	TakenCharacters[lobbyPC->SelectedCharacter] = false;
+	LobbyGS->SetTakenCharacterByIndex(LobbyPC->SelectedCharacter, false);
 
 	AllPlayerControllers.RemoveAt(i);
 	ConnectedPlayers.RemoveAt(i);
 
 	EveryoneUpdate();
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("Logout - End"));
 }
 

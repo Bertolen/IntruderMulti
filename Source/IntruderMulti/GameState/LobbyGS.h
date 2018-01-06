@@ -19,9 +19,17 @@ public:
 
 public:
 	///////// Setters
+	UFUNCTION(Server, Reliable, WithValidation)
 	void SetMapID(const int NewMapId);
 
+	UFUNCTION(Server, Reliable, WithValidation)
 	void SetTimeID(const int NewTimeId);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void SetCanWeStart(const bool NewCanWeStart);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void SetTakenCharacterByIndex(const int CharacterID, const bool TakenCharacter);
 
 	///////// Getters
 	FORCEINLINE int GetMapID() const { return MapID; }
@@ -42,12 +50,25 @@ public:
 
 	FORCEINLINE TArray<UTexture2D*> GetAllCharacterImages() const { return AllCharacterImages; }
 
+	FORCEINLINE bool GetCanWeStart() const { return CanWeStart; }
+
+	FORCEINLINE TArray<bool> GetTakenCharacters() const { return TakenCharacters; }
+
+	FORCEINLINE bool GetTakenCharacterByIndex(const int CharacterID) const { return TakenCharacters[CharacterID]; }
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 protected:
 	UPROPERTY(Replicated, BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "LobbyGS|Maps")
 		int MapID;
 
 	UPROPERTY(Replicated, BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "LobbyGS|Maps")
 		int TimeID;
+
+	UPROPERTY(Replicated, BlueprintReadOnly)
+		bool CanWeStart;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "LobbyGS|Maps")
@@ -61,4 +82,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "LobbyGS|Images|Characters")
 		TArray<UTexture2D*> AllCharacterImages;
+
+	UPROPERTY(Replicated)
+		TArray<bool> TakenCharacters;
 };

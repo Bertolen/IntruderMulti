@@ -14,6 +14,9 @@ class INTRUDERMULTI_API UCharacterSelect : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	UCharacterSelect(const FObjectInitializer & ObjectInitializer);
+
 protected:
 	virtual void NativeConstruct() override;
 	
@@ -21,7 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SelectCharacterByID(int CharacterID);
 
-	void UpdateEnabledButtons(TArray<bool> TakenCharacters);
+	UFUNCTION(BlueprintCallable)
+		void UpdateEnabledButtons();
 
 protected:
 	UPROPERTY()
@@ -29,4 +33,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 		TArray<class UButton *> CharacterButtons;
+
+	UPROPERTY()
+		FTimerHandle RetryUpdateEnabledButtons;
 };

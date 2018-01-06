@@ -61,6 +61,12 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	bool EnabledReadyStartButton();
 
+	UFUNCTION(BlueprintCallable)
+	void ShowGameSettingsWB();
+
+	UFUNCTION(BlueprintCallable)
+	void ShowCharacterSelectWB();
+
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "LobbyMenu|MapInfo")
 	FText MapName;

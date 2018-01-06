@@ -61,7 +61,7 @@ public:
 	void Kicked();
 
 	UFUNCTION(Client, Reliable)
-	void UpdateTakenCharacters(const TArray<bool> & NewTakenCharacters);
+	void UpdateTakenCharacters();
 
 	UFUNCTION(Client, Reliable)
 	void UpdateChat(const FText & Sender, const FText & Text);
@@ -106,9 +106,6 @@ public:
 
 	UPROPERTY(Replicated)
 	int SelectedCharacter;
-
-	UPROPERTY(Replicated)
-	TArray<bool> TakenCharacters;
 
 	UPROPERTY(Replicated)
 	int PreviousSelection;

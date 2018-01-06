@@ -43,13 +43,7 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void SwapCharacters(APlayerController* PlayerController, TSubclassOf<ACharacter> CharacterClass, bool ChangedStatus);
 
-	////// Getters
-	FORCEINLINE bool GetCanWeStart() const { return CanWeStart; }
-
 public:
-
-	UPROPERTY(Replicated)
-	TArray<bool> TakenCharacters;
 
 	UPROPERTY(Replicated, BlueprintReadWrite, EditAnywhere)
 	TArray<TSubclassOf<ACharacter>> Characters;
@@ -58,8 +52,6 @@ public:
 	TArray<APlayerController*> AllPlayerControllers;
 
 protected:
-	UPROPERTY(BlueprintReadOnly)
-	bool CanWeStart;
 
 	UPROPERTY()
 	TArray<AActor *> SpawnLocations;

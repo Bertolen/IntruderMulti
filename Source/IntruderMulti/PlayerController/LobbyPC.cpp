@@ -25,7 +25,6 @@ void ALobbyPC::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifet
 	DOREPLIFETIME(ALobbyPC, PlayerSettings);
 	DOREPLIFETIME(ALobbyPC, AllConnectedPlayers);
 	DOREPLIFETIME(ALobbyPC, SelectedCharacter);
-	DOREPLIFETIME(ALobbyPC, TakenCharacters);
 	DOREPLIFETIME(ALobbyPC, PreviousSelection);
 	DOREPLIFETIME(ALobbyPC, CharacterImage);
 	DOREPLIFETIME(ALobbyPC, SenderText);
@@ -224,16 +223,15 @@ void ALobbyPC::Kicked_Implementation()
 	UE_LOG(IntruderDebug, Verbose, TEXT("Kicked_Implementation - End"));
 }
 
-void ALobbyPC::UpdateTakenCharacters_Implementation(const TArray<bool> & NewTakenCharacters)
+void ALobbyPC::UpdateTakenCharacters_Implementation()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateTakenCharacters_Implementation - Begin"));
-	TakenCharacters = NewTakenCharacters;
-
+	
 	if (!LobbyMenuWB) {
 		return;
 	}
 
-	LobbyMenuWB->GetCharacterSelectWB()->UpdateEnabledButtons(TakenCharacters);
+	LobbyMenuWB->GetCharacterSelectWB()->UpdateEnabledButtons();
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateTakenCharacters_Implementation - End"));
 }
@@ -292,8 +290,8 @@ void ALobbyPC::AssignSelectedCharacter_Implementation(int CharacterID)
 	}
 
 	PreviousSelection = SelectedCharacter;
-	CharacterImage = LobbyGS->GetAllCharacterImages()[CharacterID];
 	SelectedCharacter = CharacterID;
+	CharacterImage = LobbyGS->GetAllCharacterImages()[SelectedCharacter];
 
 	CharacterCheck();
 
@@ -337,22 +335,28 @@ bool ALobbyPC::CharacterCheck_Validate()
 void ALobbyPC::CharacterCheck_Implementation()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("CharacterCheck - Begin"));
-	ALobbyGM * LobbyGM = Cast<ALobbyGM>(UGameplayStatics::GetGameMode(GetWorld()));
-	if (!LobbyGM) {
+
+	ALobbyGS * LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
+	if (!LobbyGS) {
 		return;
 	}
 
 	// Takes the new character (the base character is an exception, he's always free so never taken)
 	if (SelectedCharacter != 0) {
-		if (LobbyGM->TakenCharacters[SelectedCharacter] == false) {
-			LobbyGM->TakenCharacters[SelectedCharacter] = true;
+		if (LobbyGS->GetTakenCharacterByIndex(SelectedCharacter) == false) {
+			LobbyGS->SetTakenCharacterByIndex(SelectedCharacter, true);
 		}
 	}
 
 	// Frees the previous character
-	LobbyGM->TakenCharacters[PreviousSelection] = false;
+	LobbyGS->SetTakenCharacterByIndex(PreviousSelection, false);
 
 	// Assigns the character to the player
+	ALobbyGM * LobbyGM = Cast<ALobbyGM>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (!LobbyGM) {
+		return;
+	}
+
 	AssignPlayer(LobbyGM->Characters[SelectedCharacter], CharacterImage);
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("CharacterCheck - End"));

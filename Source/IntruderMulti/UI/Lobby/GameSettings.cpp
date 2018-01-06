@@ -8,7 +8,7 @@
 UGameSettings::UGameSettings(const FObjectInitializer & ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
+	bIsFocusable = true;
 }
 
 void UGameSettings::NativeConstruct()

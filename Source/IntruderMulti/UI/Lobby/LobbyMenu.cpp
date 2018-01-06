@@ -102,11 +102,11 @@ void ULobbyMenu::LaunchTheGame()
 bool ULobbyMenu::EnabledReadyStartButton()
 {
 	if (UKismetSystemLibrary::IsServer(GetOwningPlayer()->GetWorld())) {
-		ALobbyGM* LobbyGM = Cast<ALobbyGM>(UGameplayStatics::GetGameMode(GetOwningPlayer()->GetWorld()));
-		if (!LobbyGM) {
+		ALobbyGS* LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetOwningPlayer()->GetWorld()));
+		if (!LobbyGS) {
 			return false;
 		}
-		return LobbyGM->GetCanWeStart();
+		return LobbyGS->GetCanWeStart();
 	}
 	else {
 		ALobbyPC* LobbyPC = Cast<ALobbyPC>(GetOwningPlayer());
@@ -119,6 +119,32 @@ bool ULobbyMenu::EnabledReadyStartButton()
 		}
 	}
 	return true;
+}
+
+void ULobbyMenu::ShowGameSettingsWB()
+{
+	if (!GameSettingsWB) {
+		return;
+	}
+
+	if (!GameSettingsWB->IsVisible()) {
+		GameSettingsWB->FillPlayersWindow();
+		GameSettingsWB->SetVisibility(ESlateVisibility::Visible);
+		GameSettingsWB->SetUserFocus(GetOwningPlayer());
+	}
+}
+
+void ULobbyMenu::ShowCharacterSelectWB()
+{
+	if (!CharacterSelectWB) {
+		return;
+	}
+
+	if (!CharacterSelectWB->IsVisible()) {
+		CharacterSelectWB->UpdateEnabledButtons();
+		CharacterSelectWB->SetVisibility(ESlateVisibility::Visible);
+		CharacterSelectWB->SetUserFocus(GetOwningPlayer());
+	}
 }
 
 void ULobbyMenu::UpdatePlayerWindow_Implementation(FPlayerInfo IncomingPlayerInfo)
