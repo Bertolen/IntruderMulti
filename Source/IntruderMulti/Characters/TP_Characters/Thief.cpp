@@ -11,9 +11,9 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - Begin"));
 
-	// Don't rotate when the controller rotates. Let that just affect the camera.
+	// Set a rotation when the controller rotates so the model is always facing the same direction as the controller
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement

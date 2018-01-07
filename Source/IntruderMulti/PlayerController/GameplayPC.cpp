@@ -31,10 +31,6 @@ void AGameplayPC::BeginPlay()
 	if (IsLocalController()) {
 		UWidgetLayoutLibrary::RemoveAllWidgets(this);
 
-		if (!PlayerSettings.MyPlayerCharacter) {
-			UE_LOG(IntruderDebug, Error, TEXT("Player character null. Spawn WILL fail."));
-		}
-
 		PassCharacterInfoToServer(PlayerSettings);
 
 		FInputModeGameOnly InputMode;
@@ -66,7 +62,7 @@ void AGameplayPC::PassCharacterInfoToServer_Implementation(FPlayerInfo PlayerSet
 	SenderName = FText::FromString(PlayerSettings.MyPlayerName);
 
 	if (!PlayerSettings.MyPlayerCharacter) {
-		UE_LOG(IntruderDebug, Error, TEXT("Player character null. Spawn WILL fail."));
+		UE_LOG(IntruderDebug, Warning, TEXT("Player character null. Spawn will use the default pawn class."));
 	}
 
 	AGameplayGM * GameplayGM = Cast<AGameplayGM>(UGameplayStatics::GetGameMode(GetWorld()));

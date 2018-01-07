@@ -74,11 +74,19 @@ void AGameplayGM::RespawnPlayer_Implementation(APlayerController* PlayerControll
 		PlayerController->GetPawn()->Destroy();
 	}
 
-	// Spawn the new character at a random spawn point
+	// Find a random point to spawn the character
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), SpawnPoints);
 	int RandomIndex = UKismetMathLibrary::RandomIntegerInRange(0, SpawnPoints.Num() - 1);
 	FTransform SpawnTransform = SpawnPoints[RandomIndex]->GetActorTransform();
-	ACharacter * NewCharacter = GetWorld()->SpawnActor<ACharacter>(CharacterClass, SpawnTransform);
+
+	// Spawn the character
+	ACharacter * NewCharacter;
+	if (CharacterClass) {
+		NewCharacter = GetWorld()->SpawnActor<ACharacter>(CharacterClass, SpawnTransform);
+	}
+	else {
+		NewCharacter = GetWorld()->SpawnActor<ACharacter>(DefaultPawnClass, SpawnTransform);
+	}
 
 	// Assing the new pawn to the player controller
 	PlayerController->Possess(NewCharacter);
