@@ -22,6 +22,13 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void RespawnPlayer(APlayerController* PlayerController, TSubclassOf<ACharacter> Character);
 
+	void ThievesWin();
+
+	void GuardsWin();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void DisplayWinText(const FString & WinText);
+
 	////// Getters
 	FORCEINLINE TArray<APlayerController*> GetAllPlayerControllers() { return AllPlayerControllers; }
 

@@ -123,11 +123,9 @@ void ABaseCharacter::Use()
 	if (FocusedUsable == NULL) {
 		return;
 	}
-	UE_LOG(IntruderDebug, Verbose, TEXT("plop 1"));
 
 	// Use the object, if it can be used.
 	if (FocusedUsable->CanBeUsed(this)) {
-		UE_LOG(IntruderDebug, Verbose, TEXT("plop 2"));
 		FocusedUsable->OnUsed(this);
 	}
 

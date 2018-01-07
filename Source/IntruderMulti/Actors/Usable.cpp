@@ -27,7 +27,6 @@ bool AUsable::CanBeUsed(ACharacter* User)
 
 	AGuard * isGuard = Cast<AGuard>(User);
 	if (isGuard) {
-		UE_LOG(IntruderDebug, Verbose, TEXT("user is a guard"));
 		if (bCanBeUsedByGuard) {
 			UE_LOG(IntruderDebug, Verbose, TEXT("CanBeUsed - true"));
 			return true;
@@ -36,7 +35,6 @@ bool AUsable::CanBeUsed(ACharacter* User)
 
 	AThief * isThief = Cast<AThief>(User);
 	if (isThief) {
-		UE_LOG(IntruderDebug, Verbose, TEXT("user is a thief"));
 		if (bCanBeUsedByThief) {
 			UE_LOG(IntruderDebug, Verbose, TEXT("CanBeUsed - true"));
 			return true;

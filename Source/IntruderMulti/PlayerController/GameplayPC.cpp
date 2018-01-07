@@ -6,6 +6,7 @@
 #include "IntruderMulti/GameMode/GameplayGM.h"
 #include "IntruderMulti/UI/Gameplay/GameplayChat.h"
 #include "IntruderMulti/UI/Gameplay/GameplayMenu.h"
+#include "IntruderMulti/UI/Gameplay/EndGameWindow.h"
 #include "IntruderMulti/PlayerController/LobbyPC.h"
 
 AGameplayPC::AGameplayPC(const FObjectInitializer & ObjectInitializer)
@@ -179,4 +180,25 @@ void AGameplayPC::InitFromLobbyPC_Implementation(ALobbyPC* LobbyPC)
 	PlayerSettings = LobbyPC->PlayerSettings;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("InitFromLobbyPC - End"));
+}
+
+void AGameplayPC::DisplayEndGameWidget_Implementation(const FString & WinText)
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayEndGameWidget_Implementation - Begin"));
+
+	FInputModeUIOnly InputMode;
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+	if (EndGameWindowClass != nullptr) { // check if our widget class exists, else we'll crash
+		UEndGameWindow* EndGameWindowWB = CreateWidget<UEndGameWindow>(GetWorld(), EndGameWindowClass);
+		EndGameWindowWB->AddToViewport();
+		EndGameWindowWB->SetWinText(WinText);
+		InputMode.SetWidgetToFocus(EndGameWindowWB->GetCachedWidget());
+	}
+
+	SetInputMode(InputMode);
+
+	bShowMouseCursor = true;
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayEndGameWidget_Implementation - End"));
 }

@@ -42,6 +42,9 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 		void InitFromLobbyPC(class ALobbyPC * LobbyPC);
 
+	UFUNCTION(Client, Reliable)
+		void DisplayEndGameWidget(const FString & WinText);
+
 protected:
 	UPROPERTY()
 		FString PlayerSettingsSave;
@@ -66,4 +69,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
 		TSubclassOf<class UGameplayMenu> GameplayMenuClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
+		TSubclassOf<class UEndGameWindow> EndGameWindowClass;
 };

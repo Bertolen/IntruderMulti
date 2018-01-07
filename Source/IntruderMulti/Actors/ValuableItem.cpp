@@ -2,6 +2,9 @@
 
 #include "ValuableItem.h"
 #include "Components/StaticMeshComponent.h"
+#include "IntruderMulti/Characters/FP_Characters/Guard.h"
+#include "IntruderMulti/Characters/TP_Characters/Thief.h"
+#include "IntruderMulti/GameMode/GameplayGM.h"
 
 // Sets default values
 AValuableItem::AValuableItem(const FObjectInitializer& ObjectInitializer)
@@ -40,4 +43,35 @@ void AValuableItem::Tick(float DeltaTime)
 void AValuableItem::OnUsed(ACharacter* Newuser)
 {
 	Super::OnUsed(Newuser);
+
+	AThief* Thief = Cast<AThief>(Newuser);
+	if (Thief) {
+		// TODO (this code is temporary)
+		ThievesWin();
+	}
+	else {
+		AGuard* Guard = Cast<AGuard>(Newuser);
+		if (Guard) {
+			// TODO
+		}
+	}
+}
+
+bool AValuableItem::ThievesWin_Validate()
+{
+	return true;
+}
+
+void AValuableItem::ThievesWin_Implementation()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin_Implementation - Begin"));
+
+	AGameplayGM* GameplayGM = Cast<AGameplayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (!GameplayGM) {
+		return;
+	}
+
+	GameplayGM->ThievesWin();
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin_Implementation - End"));
 }

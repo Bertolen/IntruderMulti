@@ -93,3 +93,44 @@ void AGameplayGM::RespawnPlayer_Implementation(APlayerController* PlayerControll
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("RespawnPlayer - End"));
 }
+
+void AGameplayGM::ThievesWin()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin - Begin"));
+
+	DisplayWinText("The relic has been stolen!");
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin - End"));
+}
+
+void AGameplayGM::GuardsWin()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("GuardsWin - Begin"));
+
+	DisplayWinText("All thieves have been captured!");
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("GuardsWin - End"));
+}
+
+bool AGameplayGM::DisplayWinText_Validate(const FString & WinText)
+{
+	return true;
+}
+
+void AGameplayGM::DisplayWinText_Implementation(const FString & WinText)
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayWinText_Implementation - Begin"));
+
+	for (int i = 0; i < AllPlayerControllers.Num(); i++)
+	{
+		AGameplayPC* GameplayPC = Cast<AGameplayPC>(AllPlayerControllers[i]);
+		if (!GameplayPC) {
+			UE_LOG(IntruderDebug, Error, TEXT("Failed to cast player controller. Won't leave game properly."));
+			return;
+		}
+
+		GameplayPC->DisplayEndGameWidget(WinText);
+	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayWinText_Implementation - End"));
+}
