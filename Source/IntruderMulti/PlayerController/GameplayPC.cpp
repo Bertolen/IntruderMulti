@@ -6,6 +6,7 @@
 #include "IntruderMulti/GameMode/GameplayGM.h"
 #include "IntruderMulti/UI/Gameplay/GameplayChat.h"
 #include "IntruderMulti/UI/Gameplay/GameplayMenu.h"
+#include "IntruderMulti/PlayerController/LobbyPC.h"
 
 AGameplayPC::AGameplayPC(const FObjectInitializer & ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -21,15 +22,6 @@ void AGameplayPC::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLi
 	DOREPLIFETIME(AGameplayPC, SenderName);
 }
 
-void AGameplayPC::SetupInputComponent()
-{
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupInputComponent - Begin"));
-	Super::SetupInputComponent();
-
-	InputComponent->BindAction("ToggleDisplayMenus", IE_Released, this, &AGameplayPC::ToggleDisplay);
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupInputComponent - End"));
-}
-
 void AGameplayPC::BeginPlay()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("BeginPlay - Begin"));
@@ -38,7 +30,6 @@ void AGameplayPC::BeginPlay()
 
 	if (IsLocalController()) {
 		UWidgetLayoutLibrary::RemoveAllWidgets(this);
-		LoadGame(); 
 
 		if (!PlayerSettings.MyPlayerCharacter) {
 			UE_LOG(IntruderDebug, Error, TEXT("Player character null. Spawn WILL fail."));
@@ -60,20 +51,6 @@ void AGameplayPC::ToggleDisplay()
 	bShowMouseCursor = !bShowMouseCursor;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
-}
-
-void AGameplayPC::LoadGame()
-{
-	UE_LOG(IntruderDebug, Verbose, TEXT("LoadGame - Begin"));
-	
-	UPlayerSaveGame* SaveGame = Cast<UPlayerSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerSettingsSave, 0));
-	if (!SaveGame) {
-		return;
-	}
-
-	PlayerSettings = SaveGame->S_PlayerInfo;
-
-	UE_LOG(IntruderDebug, Verbose, TEXT("LoadGame - End"));
 }
 
 bool AGameplayPC::PassCharacterInfoToServer_Validate(FPlayerInfo PlayerSettingsInfo)
@@ -192,4 +169,18 @@ void AGameplayPC::UpdateChat_Implementation(const FText &  SenderName, const FTe
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateChat_Implementation - End"));
+}
+
+bool AGameplayPC::InitFromLobbyPC_Validate(ALobbyPC* LobbyPC)
+{
+	return true;
+}
+
+void AGameplayPC::InitFromLobbyPC_Implementation(ALobbyPC* LobbyPC)
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("InitFromLobbyPC - Begin"));
+
+	PlayerSettings = LobbyPC->PlayerSettings;
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("InitFromLobbyPC - End"));
 }

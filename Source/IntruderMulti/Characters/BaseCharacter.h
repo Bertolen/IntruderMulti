@@ -48,6 +48,9 @@ private:
 	UFUNCTION()
 	virtual void ShowGameplayMenu();
 
+	UFUNCTION()
+	void ToggleDisplay();
+
 protected:
 	// maximum distance at which the character can use an item
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hability", meta = (AllowPrivateAccess = "true"))

@@ -64,6 +64,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &ABaseCharacter::Use);
 
 	// Bind UI action
+	PlayerInputComponent->BindAction("ToggleDisplayMenus", IE_Pressed, this, &ABaseCharacter::ToggleDisplay);
 	PlayerInputComponent->BindAction("ShowInGameMenu", IE_Pressed, this, &ABaseCharacter::ShowGameplayMenu);
 }
 
@@ -141,4 +142,18 @@ void ABaseCharacter::ShowGameplayMenu()
 	}
 
 	GameplayPC->ShowMenuWindow();
+}
+
+void ABaseCharacter::ToggleDisplay()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - Begin"));
+	
+	AGameplayPC* GameplayPC = Cast<AGameplayPC>(GetController());
+	if (!GameplayPC) {
+		return;
+	}
+
+	GameplayPC->ToggleDisplay();
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
 }

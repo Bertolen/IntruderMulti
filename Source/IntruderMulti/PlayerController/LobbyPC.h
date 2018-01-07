@@ -32,8 +32,6 @@ public:
 
 	void LoadGame();
 
-	void SaveGame();
-
 	UFUNCTION()
 	void ToggleDisplay();
 

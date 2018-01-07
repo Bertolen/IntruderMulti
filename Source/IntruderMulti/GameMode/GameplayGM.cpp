@@ -2,6 +2,7 @@
 
 #include "GameplayGM.h"
 #include "IntruderMulti/PlayerController/GameplayPC.h"
+#include "IntruderMulti/PlayerController/LobbyPC.h"
 #include "IntruderMulti/GameInstance/GameInfoInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -19,7 +20,21 @@ void AGameplayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerContro
 
 	Super::SwapPlayerControllers(OldPC, NewPC);
 
+	// keeps the list of player controllers to date
 	AllPlayerControllers.Add(NewPC);
+
+	//transmits important data from the old controller to the new controller
+	AGameplayPC* GameplayPC = Cast<AGameplayPC>(NewPC);
+	if (!GameplayPC) {
+		return;
+	}
+
+	ALobbyPC* LobbyPC = Cast<ALobbyPC>(OldPC);
+	if (!LobbyPC) {
+		return;
+	}
+
+	GameplayPC->InitFromLobbyPC(LobbyPC);
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("SwapPlayerControllers - End"));
 }

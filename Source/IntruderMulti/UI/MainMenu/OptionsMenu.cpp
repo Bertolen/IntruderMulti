@@ -64,10 +64,13 @@ void UOptionsMenu::LoadGame()
 {
 	UPlayerSaveGame* PlayerSaveGame = Cast<UPlayerSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerSettingsSave, 0));
 	if (!PlayerSaveGame) {
+		UE_LOG(IntruderDebug, Error, TEXT("Load failed! Player won't be correctly loaded."));
 		return;
 	}
 
 	PlayerInfo = PlayerSaveGame->S_PlayerInfo;
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("Loaded save game for player %s"), *PlayerInfo.MyPlayerName);
 }
 
 void UOptionsMenu::SaveGame()
@@ -82,7 +85,11 @@ void UOptionsMenu::SaveGame()
 	}
 
 	SaveGameRef->S_PlayerInfo = PlayerInfo;
-	UGameplayStatics::SaveGameToSlot(SaveGameRef, PlayerSettingsSave, 0);
+	if (!UGameplayStatics::SaveGameToSlot(SaveGameRef, PlayerSettingsSave, 0)) {
+		UE_LOG(IntruderDebug, Error, TEXT("Save failed!"));
+	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("Saved Game for %s"), *PlayerInfo.MyPlayerName);
 }
 
 void UOptionsMenu::ShowMainMenu()

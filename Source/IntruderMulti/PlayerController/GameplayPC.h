@@ -21,13 +21,8 @@ public:
 public:
 	virtual void BeginPlay() override;
 
-	virtual void SetupInputComponent() override;
-
 	UFUNCTION()
 		void ToggleDisplay();
-
-	UFUNCTION()
-		void LoadGame();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 		void PassCharacterInfoToServer(FPlayerInfo PlayerSettingsInfo);
@@ -43,6 +38,9 @@ public:
 
 	UFUNCTION(Client, Reliable)
 		void UpdateChat(const FText & SenderName, const FText & SenderText);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void InitFromLobbyPC(class ALobbyPC * LobbyPC);
 
 protected:
 	UPROPERTY()
