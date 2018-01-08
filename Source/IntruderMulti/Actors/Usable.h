@@ -24,7 +24,10 @@ public:
 	bool CanBeUsed(ACharacter* User);
 
 	// This function will be called when the user uses the object
-	virtual void OnUsed(ACharacter* User);	
+	virtual void OnUsed(ACharacter* User);
+
+	////// Getters
+	FORCEINLINE UStaticMeshComponent* GetMesh() const { return Mesh; }
 
 protected:
 	// Indicates if this item can be used by a thief
@@ -34,4 +37,8 @@ protected:
 	// Indicates if this item can be used by a guard
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bCanBeUsedByGuard;
+
+private:
+	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent * Mesh;
 };

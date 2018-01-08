@@ -37,6 +37,7 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 
 	// Init some values
 	UsingReach += CameraBoom->TargetArmLength;
+	bIsCarryingAValuable = false;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - End"));
 }

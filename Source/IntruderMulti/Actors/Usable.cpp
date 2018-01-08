@@ -3,6 +3,7 @@
 #include "Usable.h"
 #include "IntruderMulti/Characters/FP_Characters/Guard.h"
 #include "IntruderMulti/Characters/TP_Characters/Thief.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 AUsable::AUsable(const FObjectInitializer& ObjectInitializer)
@@ -11,6 +12,8 @@ AUsable::AUsable(const FObjectInitializer& ObjectInitializer)
  	// Set this actor to call never Tick().
 	PrimaryActorTick.bCanEverTick = false;
 
+	// Init the mesh
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
 }
 
 // Called when the game starts or when spawned

@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ValuableItem.h"
-#include "Components/StaticMeshComponent.h"
 #include "IntruderMulti/Characters/FP_Characters/Guard.h"
 #include "IntruderMulti/Characters/TP_Characters/Thief.h"
 #include "IntruderMulti/GameMode/GameplayGM.h"
@@ -14,12 +13,12 @@ AValuableItem::AValuableItem(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Init the mesh
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
-	if (Mesh) {
-		Mesh->SetSimulatePhysics(false);
+	if (GetMesh()) {
+		GetMesh()->SetSimulatePhysics(false);
 	}
 
-	bCanBeUsedByGuard = true;
+	// By default this item can't be used by a guard, it can only be stolen by a thief
+	bCanBeUsedByGuard = false;
 	bCanBeUsedByThief = true;
 }
 
@@ -46,13 +45,15 @@ void AValuableItem::OnUsed(ACharacter* Newuser)
 
 	AThief* Thief = Cast<AThief>(Newuser);
 	if (Thief) {
-		// TODO (this code is temporary)
-		ThievesWin();
+		// The item is removed from the level and the thief memorize he has it
+		Thief->SetIsCarryingAValuable(true);
+		Destroy();
 	}
 	else {
 		AGuard* Guard = Cast<AGuard>(Newuser);
 		if (Guard) {
 			// TODO
+			// What to do when a guard uses the item
 		}
 	}
 }
