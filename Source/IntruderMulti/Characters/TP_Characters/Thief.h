@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/BaseCharacter.h"
+#include "IntruderMulti/Actors/ValuableItem.h"
 #include "Thief.generated.h"
 
 /**
@@ -24,6 +25,25 @@ public:
 	/** Handles stafing movement, left and right */
 	virtual void MoveRight(float Val) override;
 
+	/** Called when the thief is captured by a guard **/
+	UFUNCTION(Server, Reliable, WithValidation)
+	virtual void Capture(class AGuard* Catcher);
+
+	/** Called when the thief grabs a valuable object **/
+	UFUNCTION(Server, Reliable, WithValidation)
+	virtual void GrabAValuable(class AValuableItem* Item);
+
+	/////////////////////////////
+	// UsableInterface
+
+	// This function can be called to know if the object can be used or not by the given character
+	virtual bool CanBeUsed(ACharacter* User) override;
+
+	// This function will be called when the user uses the object
+	virtual void OnUsed(ACharacter* User) override;
+
+	////////////////////////////
+
 	////// Getters
 
 	/** Returns CameraBoom subobject **/
@@ -33,7 +53,9 @@ public:
 
 	////// Setters
 
-	FORCEINLINE void SetIsCarryingAValuable(const bool NewValue) { bIsCarryingAValuable = NewValue; }
+	void SetIsCarryingAValuable(const bool NewValue) { bIsCarryingAValuable = NewValue; }
+
+	void SetValuableClass(TSubclassOf<AValuableItem> NewValuableClass) { ValuableClass = NewValuableClass; }
 
 protected:
 	// APawn interface
@@ -45,7 +67,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
-	UPROPERTY()
-		bool bIsCarryingAValuable;
+	UPROPERTY(Replicated)
+	bool bIsCarryingAValuable;
+
+	UPROPERTY(Replicated)
+	TSubclassOf<AValuableItem> ValuableClass;
 
 };

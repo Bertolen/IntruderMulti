@@ -12,6 +12,9 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	// Activate Replication
+	bReplicates = true;
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -109,18 +112,20 @@ void ABaseCharacter::UpdateFocusLine()
 	FHitResult Hit(ForceInit);
 
 	// simple trace function
-	GetWorld()->LineTraceSingleByChannel(Hit, StartTrace, EndTrace, ECollisionChannel::ECC_Visibility, TraceParams);
+	GetWorld()->LineTraceSingleByChannel(Hit, StartTrace, EndTrace, ECollisionChannel::ECC_Camera, TraceParams);
 
-	// we cast the hit actor to the AUsable Actor
-	FocusedUsable = Cast<AUsable>(Hit.GetActor());
+	// we cast the hit actor to the IUsableInterface Actor
+	FocusedUsable = Cast<IUsableInterface>(Hit.GetActor());
 }
 
 void ABaseCharacter::Use()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("Use - Begin"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Use")));
 
 	// we access the usable item, make sure we have one, else we will crash
 	if (FocusedUsable == NULL) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("no focusable")));
 		return;
 	}
 
@@ -155,3 +160,74 @@ void ABaseCharacter::ToggleDisplay()
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
 }
+
+void ABaseCharacter::SetRagdollPhysics_Implementation()
+{
+	bool bInRagdoll = false;
+	USkeletalMeshComponent* Mesh1P = GetMesh();
+
+	bReplicateMovement = false;
+	bTearOff = true;
+
+	if (Mesh1P)
+	{
+		Mesh1P->SetOwnerNoSee(false);
+		Mesh1P->SetCollisionProfileName(TEXT("Ragdoll"));
+	}
+
+	SetActorEnableCollision(true);
+
+	if (IsPendingKill())
+	{
+		bInRagdoll = false;
+	}
+	else if (!Mesh1P || !Mesh1P->GetPhysicsAsset())
+	{
+		bInRagdoll = false;
+	}
+	else
+	{
+		Mesh1P->SetAllBodiesSimulatePhysics(true);
+		Mesh1P->SetSimulatePhysics(true);
+		Mesh1P->WakeAllRigidBodies();
+		Mesh1P->bBlendPhysics = true;
+
+		bInRagdoll = true;
+	}
+
+	UCharacterMovementComponent* CharacterComp = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	if (CharacterComp)
+	{
+		CharacterComp->StopMovementImmediately();
+		CharacterComp->DisableMovement();
+		CharacterComp->SetComponentTickEnabled(false);
+	}
+
+	if (!bInRagdoll)
+	{
+		// Immediately hide the pawn
+		TurnOff();
+		SetActorHiddenInGame(true);
+		SetLifeSpan(1.0f);
+	}
+	else
+	{
+		SetLifeSpan(10.0f);
+	}
+}
+
+////////////////////////////
+// Usable interface
+
+// This function can be called to know if the object can be used or not by the given character
+bool ABaseCharacter::CanBeUsed(ACharacter* User)
+{
+	return false;
+}
+
+// This function will be called when the user uses the object
+void ABaseCharacter::OnUsed(ACharacter* Newuser)
+{
+
+}
+////////////////////////

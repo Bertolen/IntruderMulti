@@ -57,3 +57,24 @@ void AUsable::OnUsed(ACharacter* Newuser)
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("OnUsed - End"));
 }
+
+////// Setters
+bool AUsable::SetCanBeUsedByThief_Validate(const bool NewValue)
+{
+	return true;
+}
+
+void AUsable::SetCanBeUsedByThief_Implementation(const bool NewValue)
+{
+	bCanBeUsedByThief = NewValue;
+}
+
+bool AUsable::SetCanBeUsedByGuard_Validate(const bool NewValue)
+{
+	return true;
+}
+
+void AUsable::SetCanBeUsedByGuard_Implementation(const bool NewValue)
+{
+	bCanBeUsedByGuard = NewValue;
+}

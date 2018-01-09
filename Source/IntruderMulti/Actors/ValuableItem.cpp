@@ -12,6 +12,9 @@ AValuableItem::AValuableItem(const FObjectInitializer& ObjectInitializer)
  	// Set this actor to be able to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// let the object replicate (for multicast functions)
+	bReplicates = true;
+
 	// Init the mesh
 	if (GetMesh()) {
 		GetMesh()->SetSimulatePhysics(false);
@@ -46,8 +49,7 @@ void AValuableItem::OnUsed(ACharacter* Newuser)
 	AThief* Thief = Cast<AThief>(Newuser);
 	if (Thief) {
 		// The item is removed from the level and the thief memorize he has it
-		Thief->SetIsCarryingAValuable(true);
-		Destroy();
+		Thief->GrabAValuable(this);
 	}
 	else {
 		AGuard* Guard = Cast<AGuard>(Newuser);
@@ -58,21 +60,7 @@ void AValuableItem::OnUsed(ACharacter* Newuser)
 	}
 }
 
-bool AValuableItem::ThievesWin_Validate()
+void AValuableItem::MulticastDestroy_Implementation()
 {
-	return true;
-}
-
-void AValuableItem::ThievesWin_Implementation()
-{
-	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin_Implementation - Begin"));
-
-	AGameplayGM* GameplayGM = Cast<AGameplayGM>(UGameplayStatics::GetGameMode(GetWorld()));
-	if (!GameplayGM) {
-		return;
-	}
-
-	GameplayGM->ThievesWin();
-
-	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin_Implementation - End"));
+	Destroy();
 }

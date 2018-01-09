@@ -22,11 +22,11 @@ public:
 	// This function will be called when the user uses the object
 	virtual void OnUsed(ACharacter* User) override;
 
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastDestroy();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UFUNCTION(Server, Reliable, WithValidation)
-	void ThievesWin();
 	
 };

@@ -4,10 +4,11 @@
 
 #include "IntruderMulti.h"
 #include "GameFramework/Actor.h"
+#include "IntruderMulti/Interface/UsableInterface.h"
 #include "Usable.generated.h"
 
 UCLASS()
-class INTRUDERMULTI_API AUsable : public AActor
+class INTRUDERMULTI_API AUsable : public AActor, public IUsableInterface
 {
 	GENERATED_BODY()
 	
@@ -20,14 +21,21 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// This function can be called to know if the object can be used or not by th given controller
-	bool CanBeUsed(ACharacter* User);
+	// This function can be called to know if the object can be used or not by the given character
+	virtual bool CanBeUsed(ACharacter* User) override;
 
 	// This function will be called when the user uses the object
-	virtual void OnUsed(ACharacter* User);
+	virtual void OnUsed(ACharacter* User) override;
 
 	////// Getters
 	FORCEINLINE UStaticMeshComponent* GetMesh() const { return Mesh; }
+
+	////// Setters
+	UFUNCTION(Server, Reliable, WithValidation)
+	void SetCanBeUsedByThief(const bool NewValue);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void SetCanBeUsedByGuard(const bool NewValue);
 
 protected:
 	// Indicates if this item can be used by a thief

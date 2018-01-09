@@ -4,11 +4,11 @@
 
 #include "IntruderMulti.h"
 #include "GameFramework/Character.h"
-#include "IntruderMulti/Actors/Usable.h"
+#include "IntruderMulti/Interface/UsableInterface.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS()
-class INTRUDERMULTI_API ABaseCharacter : public ACharacter
+class INTRUDERMULTI_API ABaseCharacter : public ACharacter, public IUsableInterface
 {
 	GENERATED_BODY()
 
@@ -31,14 +31,28 @@ public:
 	/** Updates the focus line and sets the new focused usable item**/
 	virtual void UpdateFocusLine();
 
+	/////////////////////////////
+	// UsableInterface
+
+	// This function can be called to know if the object can be used or not by the given character
+	virtual bool CanBeUsed(ACharacter* User) override;
+
+	// This function will be called when the user uses the object
+	virtual void OnUsed(ACharacter* User) override;
+
+	////////////////////////////
+
 	////// Getters
-	FORCEINLINE AUsable* GetFocusedUsable() const { return FocusedUsable; }
+	FORCEINLINE IUsableInterface* GetFocusedUsable() const { return FocusedUsable; }
 
 	FORCEINLINE UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void SetRagdollPhysics();
 
 private:
 	// This method uses the usable item on focus
@@ -62,7 +76,6 @@ private:
 	UCameraComponent* CameraComponent;
 
 	// Usable item on focus
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hability", meta = (AllowPrivateAccess = "true"))
-	AUsable* FocusedUsable;
+	IUsableInterface* FocusedUsable;
 	
 };

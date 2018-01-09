@@ -5,6 +5,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "IntruderMulti/Characters/FP_Characters/Guard.h"
 
 AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -40,6 +41,14 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	bIsCarryingAValuable = false;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - End"));
+}
+
+void AThief::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AThief, bIsCarryingAValuable);
+	DOREPLIFETIME(AThief, ValuableClass);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,4 +93,63 @@ void AThief::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+////////////////////////////
+// Usable interface
+
+// This function can be called to know if the object can be used or not by the given character
+bool AThief::CanBeUsed(ACharacter* User)
+{
+	AGuard* Guard = Cast<AGuard>(User);
+	if (Guard) {
+		return true;
+	}
+	return false;
+}
+
+// This function will be called when the user uses the object
+void AThief::OnUsed(ACharacter* User)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Thief OnUsed")));
+	AGuard* Guard = Cast<AGuard>(User);
+	if (!Guard) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("User is not a guard, bye bye ")));
+		return;
+	}
+
+	Capture(Guard);
+}
+////////////////////////
+
+bool AThief::Capture_Validate(AGuard* Catcher)
+{
+	return true;
+}
+
+void AThief::Capture_Implementation(AGuard* Catcher)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Capture Implementation")));
+	if (bIsCarryingAValuable) {
+		// Spawn the valuable at the thief's location
+		AValuableItem * Valuable = GetWorld()->SpawnActor<AValuableItem>(ValuableClass, GetActorTransform());
+		Valuable->SetCanBeUsedByGuard(true);
+	}
+
+	// destroy the pawn
+	SetRagdollPhysics();
+	//Destroy();
+}
+
+bool AThief::GrabAValuable_Validate(AValuableItem* Item)
+{
+	return true;
+}
+
+void AThief::GrabAValuable_Implementation(AValuableItem* Item)
+{
+	SetIsCarryingAValuable(true);
+	SetValuableClass(Item->StaticClass());
+	
+	Item->MulticastDestroy();
 }
