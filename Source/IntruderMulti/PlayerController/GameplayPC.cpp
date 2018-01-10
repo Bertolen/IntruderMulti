@@ -4,7 +4,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/UMG/Public/Blueprint/WidgetLayoutLibrary.h"
 #include "IntruderMulti/GameMode/GameplayGM.h"
-#include "IntruderMulti/UI/Gameplay/GameplayChat.h"
 #include "IntruderMulti/UI/Gameplay/GameplayMenu.h"
 #include "IntruderMulti/UI/Gameplay/EndGameWindow.h"
 #include "IntruderMulti/PlayerController/LobbyPC.h"
@@ -50,6 +49,17 @@ void AGameplayPC::ToggleDisplay()
 	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
 }
 
+void AGameplayPC::TypeChatMessage()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - Begin"));
+
+	if (GameplayMenuWB && GameplayMenuWB->GetChatWindow()) {
+		GameplayMenuWB->GetChatWindow()->StartTyping();
+	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
+}
+
 bool AGameplayPC::PassCharacterInfoToServer_Validate(FPlayerInfo PlayerSettingsInfo)
 {
 	return true;
@@ -73,7 +83,7 @@ void AGameplayPC::PassCharacterInfoToServer_Implementation(FPlayerInfo PlayerSet
 
 	GameplayGM->RespawnPlayer(this, PlayerSettings.MyPlayerCharacter);
 
-	SetupChatWindow();
+	SetupMenuWindow();
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("PassCharacterInfoToServer_Implementation - End"));
 }
@@ -107,16 +117,19 @@ void AGameplayPC::GetChatMessage_Implementation(const FText &  Text)
 	UE_LOG(IntruderDebug, Verbose, TEXT("GetChatMessage_Implementation - End"));
 }
 
-void AGameplayPC::SetupChatWindow_Implementation()
+void AGameplayPC::SetupMenuWindow_Implementation()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("SetupChatWindow_Implementation - Begin"));
 
-	if (GameplayChatClass != nullptr) { // check if our widget class exists, else we'll crash
-		if (GameplayChatWB == nullptr) { // init the widget
-			GameplayChatWB = CreateWidget<UGameplayChat>(GetWorld(), GameplayChatClass);
+	// TODO : use the gameplay menu to display the gameplay chat
+	if (GameplayMenuClass != nullptr) { // check if our widget class exists, else we'll crash
+		if (GameplayMenuWB == nullptr) { // init the widget
+			GameplayMenuWB = CreateWidget<UGameplayMenu>(GetWorld(), GameplayMenuClass);
 		}
+		GameplayMenuWB->AddToViewport();
 
-		GameplayChatWB->AddToViewport();
+		// hide the menu
+		GameplayMenuWB->Hide();
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("SetupChatWindow_Implementation - End"));
@@ -133,22 +146,7 @@ void AGameplayPC::ShowMenuWindow()
 		}
 
 		// Show our widget
-		GameplayMenuWB->SetVisibility(ESlateVisibility::Visible);
-
-		// The mouse movement will no longer control the camera
-		FInputModeGameAndUI InputMode;
-		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-		InputMode.SetWidgetToFocus(GameplayMenuWB->GetCachedWidget());
-		InputMode.SetHideCursorDuringCapture(true);
-		SetInputMode(InputMode);
-
-		// Centers the mouse position
-		UGameUserSettings* GameSettings = UGameUserSettings::GetGameUserSettings();
-		FIntPoint ScreenResolution = GameSettings->GetScreenResolution();
-		SetMouseLocation(ScreenResolution.X / 2, ScreenResolution.Y / 2);
-
-		// Show the cursor
-		bShowMouseCursor = true;
+		GameplayMenuWB->ShowMenu();
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("ShowMenuWindow - End"));
@@ -158,8 +156,8 @@ void AGameplayPC::UpdateChat_Implementation(const FText &  SenderName, const FTe
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateChat_Implementation - Begin"));
 
-	if (GameplayChatWB->GetChatWindow()) {
-		GameplayChatWB->GetChatWindow()->UpdateChatWindow(SenderName, SenderText);
+	if (GameplayMenuWB && GameplayMenuWB->GetChatWindow()) {
+		GameplayMenuWB->GetChatWindow()->UpdateChatWindow(SenderName, SenderText);
 	}
 	else {
 		UE_LOG(IntruderDebug, Warning, TEXT("Gameplay Chat Window not found. Messages won't appear on screen."));
@@ -186,16 +184,11 @@ void AGameplayPC::DisplayEndGameWidget_Implementation(const FString & WinText)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayEndGameWidget_Implementation - Begin"));
 
+	GameplayMenuWB->ShowEndGameWindow(WinText);
+
 	FInputModeUIOnly InputMode;
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	if (EndGameWindowClass != nullptr) { // check if our widget class exists, else we'll crash
-		UEndGameWindow* EndGameWindowWB = CreateWidget<UEndGameWindow>(GetWorld(), EndGameWindowClass);
-		EndGameWindowWB->AddToViewport();
-		EndGameWindowWB->SetWinText(WinText);
-		InputMode.SetWidgetToFocus(EndGameWindowWB->GetCachedWidget());
-	}
-
+	InputMode.SetWidgetToFocus(GameplayMenuWB->GetCachedWidget());
 	SetInputMode(InputMode);
 
 	bShowMouseCursor = true;

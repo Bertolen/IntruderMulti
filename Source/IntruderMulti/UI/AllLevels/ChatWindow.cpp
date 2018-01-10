@@ -26,22 +26,46 @@ void UChatWindow::UpdateChatWindow_Implementation(const FText & Sender, const FT
 void UChatWindow::CommitText(FText Text)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("CommitText - Begin"));
-
-	ALobbyPC* LobbyPC = Cast<ALobbyPC>(GetOwningPlayer());
-	if (LobbyPC) {
-		LobbyPC->GetChatMessage(Text);
-	}
-	else {
+	
+	// We don't send an empty message
+	if (!Text.IsEmptyOrWhitespace()) {
 		
-		AGameplayPC* GameplayPC = Cast<AGameplayPC>(GetOwningPlayer());
-		if (!GameplayPC) {
-			return;
+		// Send the message to the current player controller
+		ALobbyPC* LobbyPC = Cast<ALobbyPC>(GetOwningPlayer());
+		if (LobbyPC) {
+			LobbyPC->GetChatMessage(Text);
+		}
+		else {
+
+			AGameplayPC* GameplayPC = Cast<AGameplayPC>(GetOwningPlayer());
+			if (GameplayPC) {
+				GameplayPC->GetChatMessage(Text);
+			}
 		}
 
-		GameplayPC->GetChatMessage(Text);
+		ChatEntryWB->SetText(FText());
 	}
 
-	ChatEntryWB->SetText(FText());
+	ChatEntryWB->SetVisibility(ESlateVisibility::Hidden);
+
+	// Change the input mode so the player can control his character properly again
+	FInputModeGameOnly InputMode;
+	GetOwningPlayer()->SetInputMode(InputMode);
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("CommitText - End"));
+}
+
+void UChatWindow::StartTyping()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("StartTyping - Begin"));
+	
+	ChatEntryWB->SetVisibility(ESlateVisibility::Visible);
+
+	FInputModeGameAndUI InputMode;
+	InputMode.SetWidgetToFocus(ChatEntryWB->GetCachedWidget());
+	InputMode.SetHideCursorDuringCapture(true);
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
+	GetOwningPlayer()->SetInputMode(InputMode);
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("StartTyping - End"));
 }

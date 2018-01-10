@@ -47,13 +47,14 @@ void ULobbyMenu::NativeConstruct()
 void ULobbyMenu::LeaveLobby()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("LeaveLobby - Begin"));
+
 	UGameInfoInstance* GameInstance = Cast<UGameInfoInstance>(UGameplayStatics::GetGameInstance(GetOwningPlayer()->GetWorld()));
 	if (!GameInstance) {
 		return;
 	}
 
 	GameInstance->DestroySessionCaller(GetOwningPlayer());
-	UGameplayStatics::OpenLevel(GetOwningPlayer()->GetWorld(), "MainMenu");
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("LeaveLobby - End"));
 }
 

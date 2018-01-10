@@ -14,7 +14,6 @@ void UEndGameWindow::Leave()
 	}
 
 	GameInstance->DestroySessionCaller(GetOwningPlayer());
-	UGameplayStatics::OpenLevel(GetOwningPlayer()->GetWorld(), "MainMenu");
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Leave - End"));
 }

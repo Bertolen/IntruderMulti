@@ -216,8 +216,6 @@ void ALobbyPC::Kicked_Implementation()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("Kicked_Implementation - Begin"));
 
-	UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
-
 	UGameInfoInstance * GameInstance = Cast<UGameInfoInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (!GameInstance) {
 		return;

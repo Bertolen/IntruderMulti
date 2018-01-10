@@ -69,6 +69,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	// Bind UI action
 	PlayerInputComponent->BindAction("ToggleDisplayMenus", IE_Pressed, this, &ABaseCharacter::ToggleDisplay);
 	PlayerInputComponent->BindAction("ShowInGameMenu", IE_Pressed, this, &ABaseCharacter::ShowGameplayMenu);
+	PlayerInputComponent->BindAction("TypeChatMessage", IE_Pressed, this, &ABaseCharacter::TypeChatMessage);
 }
 
 void ABaseCharacter::MoveForward(float Value)
@@ -121,11 +122,9 @@ void ABaseCharacter::UpdateFocusLine()
 void ABaseCharacter::Use()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("Use - Begin"));
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Use")));
 
 	// we access the usable item, make sure we have one, else we will crash
 	if (FocusedUsable == NULL) {
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("no focusable")));
 		return;
 	}
 
@@ -139,12 +138,16 @@ void ABaseCharacter::Use()
 
 void ABaseCharacter::ShowGameplayMenu()
 {
+	UE_LOG(IntruderDebug, Verbose, TEXT("ShowGameplayMenu - Begin"));
+
 	AGameplayPC* GameplayPC = Cast<AGameplayPC>(GetController());
 	if (!GameplayPC) {
 		return;
 	}
 
 	GameplayPC->ShowMenuWindow();
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("ShowGameplayMenu - End"));
 }
 
 void ABaseCharacter::ToggleDisplay()
@@ -159,6 +162,20 @@ void ABaseCharacter::ToggleDisplay()
 	GameplayPC->ToggleDisplay();
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
+}
+
+void ABaseCharacter::TypeChatMessage()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - Begin"));
+
+	AGameplayPC* GameplayPC = Cast<AGameplayPC>(GetController());
+	if (!GameplayPC) {
+		return;
+	}
+
+	GameplayPC->TypeChatMessage();
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
 }
 
 void ABaseCharacter::SetRagdollPhysics_Implementation()

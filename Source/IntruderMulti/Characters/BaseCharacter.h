@@ -54,6 +54,8 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void SetRagdollPhysics();
 
+	void TypeChatMessage();
+
 private:
 	// This method uses the usable item on focus
 	UFUNCTION(BlueprintCallable, Category = "Hability")

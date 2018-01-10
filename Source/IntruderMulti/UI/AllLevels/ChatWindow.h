@@ -21,6 +21,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void CommitText(FText Text);
 
+	void StartTyping();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (BlueprintProtected = "true"))
 		class UScrollBox * ChatLogWB;

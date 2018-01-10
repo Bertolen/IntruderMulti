@@ -22,6 +22,9 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
+		void TypeChatMessage();
+
+	UFUNCTION()
 		void ToggleDisplay();
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -31,7 +34,7 @@ public:
 		void GetChatMessage(const FText & Text);
 
 	UFUNCTION(Client, Reliable)
-		void SetupChatWindow();
+		void SetupMenuWindow();
 
 	UFUNCTION()
 		void ShowMenuWindow();
@@ -59,17 +62,8 @@ protected:
 		FText SenderName;
 
 	UPROPERTY()
-		class UGameplayChat* GameplayChatWB;
-
-	UPROPERTY()
 		class UGameplayMenu* GameplayMenuWB;
 
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
-		TSubclassOf<class UGameplayChat> GameplayChatClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
 		TSubclassOf<class UGameplayMenu> GameplayMenuClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
-		TSubclassOf<class UEndGameWindow> EndGameWindowClass;
 };
