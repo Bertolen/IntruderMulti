@@ -502,7 +502,8 @@ void UGameInfoInstance::OnDestroySessionComplete(FName SessionName, bool bWasSuc
 			// If it was successful, we just load another level (could be a MainMenu!)
 			if (bWasSuccessful)
 			{
-				UGameplayStatics::OpenLevel(GetWorld(), "MainMenu", true);
+				// Removed this because it's doing it in double
+				//UGameplayStatics::OpenLevel(GetWorld(), "MainMenu", true);
 			}
 		}
 	}

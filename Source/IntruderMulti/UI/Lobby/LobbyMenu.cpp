@@ -55,6 +55,8 @@ void ULobbyMenu::LeaveLobby()
 
 	GameInstance->DestroySessionCaller(GetOwningPlayer());
 
+	UGameplayStatics::OpenLevel(GetOwningPlayer()->GetWorld(), "MainMenu");
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("LeaveLobby - End"));
 }
 

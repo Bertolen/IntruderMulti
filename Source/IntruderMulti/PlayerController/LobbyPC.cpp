@@ -223,6 +223,8 @@ void ALobbyPC::Kicked_Implementation()
 
 	GameInstance->DestroySessionCaller(this);
 
+	UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("Kicked_Implementation - End"));
 }
 
