@@ -25,8 +25,23 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 		void MulticastDestroy();
 
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ReturnToSpawnTransform();
+
+	////// Getters
+
+	FORCEINLINE FTransform GetSpawnTransform() const { return SpawnTransform; }
+
+	////// Setters
+
+	FORCEINLINE void SetSpawnTransform(const FTransform _SpawnTransform) { SpawnTransform = _SpawnTransform; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private:
+
+	FTransform SpawnTransform;
 	
 };

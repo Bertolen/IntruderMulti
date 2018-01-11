@@ -49,3 +49,13 @@ void AGuard::Capture_Implementation(AThief* Thief)
 {
 	Thief->GotCaught(this);
 }
+
+bool AGuard::UseValuable_Validate(AValuableItem* Item)
+{
+	return true;
+}
+
+void AGuard::UseValuable_Implementation(AValuableItem* Item)
+{
+	Item->ReturnToSpawnTransform();
+}

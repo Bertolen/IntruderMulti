@@ -132,7 +132,8 @@ bool AThief::GrabAValuable_Validate(AValuableItem* Item)
 void AThief::GrabAValuable_Implementation(AValuableItem* Item)
 {
 	SetIsCarryingAValuable(true);
-	SetValuableClass(Item->StaticClass());
+	SetValuableClass(Item->GetClass());
+	ValuableSpawnTransform = Item->GetSpawnTransform();
 	
 	Item->MulticastDestroy();
 }
@@ -148,8 +149,10 @@ void AThief::GotCaught_Implementation(class AGuard* Catcher)
 
 	if (bIsCarryingAValuable) {
 		// Spawn the valuable at the thief's location
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Spawning %s actor"), *GetValuableClass().GetDefaultObject()->GetFName().ToString()));
 		AValuableItem * Valuable = GetWorld()->SpawnActor<AValuableItem>(GetValuableClass(), GetActorTransform());
 		Valuable->SetCanBeUsedByGuard(true);
+		Valuable->SetSpawnTransform(ValuableSpawnTransform);
 	}
 
 	// kill the pawn

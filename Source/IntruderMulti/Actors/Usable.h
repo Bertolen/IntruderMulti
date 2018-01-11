@@ -39,11 +39,11 @@ public:
 
 protected:
 	// Indicates if this item can be used by a thief
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bCanBeUsedByThief;
 
 	// Indicates if this item can be used by a guard
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bCanBeUsedByGuard;
 
 private:

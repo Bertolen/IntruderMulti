@@ -75,4 +75,6 @@ private:
 	UPROPERTY(Replicated)
 	TSubclassOf<AValuableItem> ValuableClass;
 
+	UPROPERTY()
+	FTransform ValuableSpawnTransform;
 };

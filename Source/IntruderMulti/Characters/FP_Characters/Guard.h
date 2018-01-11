@@ -22,6 +22,10 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	virtual void Capture(class AThief* Thief);
 
+	/** Called when the guard uses a valuable object **/
+	UFUNCTION(Server, Reliable, WithValidation)
+		virtual void UseValuable(class AValuableItem* Item);
+
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 

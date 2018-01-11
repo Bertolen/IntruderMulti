@@ -12,12 +12,9 @@ AValuableItem::AValuableItem(const FObjectInitializer& ObjectInitializer)
  	// Set this actor to be able to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// let the object replicate (for multicast functions)
-	bReplicates = true;
-
 	// Init the mesh
 	if (GetMesh()) {
-		GetMesh()->SetSimulatePhysics(false);
+		GetMesh()->SetSimulatePhysics(true);
 	}
 
 	// By default this item can't be used by a guard, it can only be stolen by a thief
@@ -32,6 +29,9 @@ void AValuableItem::BeginPlay()
 	
 	// This actor can't call Tick yet
 	SetActorTickEnabled(false);
+
+	// Init the SpawnTransform
+	SpawnTransform = GetActorTransform();
 }
 
 // Called every frame
@@ -54,8 +54,7 @@ void AValuableItem::OnUsed(ACharacter* Newuser)
 	else {
 		AGuard* Guard = Cast<AGuard>(Newuser);
 		if (Guard) {
-			// TODO
-			// What to do when a guard uses the item
+			Guard->UseValuable(this);
 		}
 	}
 }
@@ -63,4 +62,17 @@ void AValuableItem::OnUsed(ACharacter* Newuser)
 void AValuableItem::MulticastDestroy_Implementation()
 {
 	Destroy();
+}
+
+bool AValuableItem::ReturnToSpawnTransform_Validate()
+{
+	return true;
+}
+
+void AValuableItem::ReturnToSpawnTransform_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("Return to spawn transform"));
+	SetActorTransform(SpawnTransform);
+	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+	GetMesh()->SetPhysicsAngularVelocity(FVector::ZeroVector);
 }

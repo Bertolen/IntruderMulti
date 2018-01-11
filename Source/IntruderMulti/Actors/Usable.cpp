@@ -12,8 +12,21 @@ AUsable::AUsable(const FObjectInitializer& ObjectInitializer)
  	// Set this actor to call never Tick().
 	PrimaryActorTick.bCanEverTick = false;
 
+	// let the object replicate (for multicast functions)
+	bReplicates = true;
+	bReplicateMovement = true;
+
 	// Init the mesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
+	RootComponent = Mesh;
+}
+
+void AUsable::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AUsable, bCanBeUsedByThief);
+	DOREPLIFETIME(AUsable, bCanBeUsedByGuard);
 }
 
 // Called when the game starts or when spawned
@@ -23,7 +36,7 @@ void AUsable::BeginPlay()
 
 }
 
-// This function can be called to know if the object can be used or not by th given controller
+// This function can be called to know if the object can be used or not by the given character
 bool AUsable::CanBeUsed(ACharacter* User)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("CanBeUsed - Begin"));
