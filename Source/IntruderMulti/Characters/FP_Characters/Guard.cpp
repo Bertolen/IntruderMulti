@@ -3,6 +3,7 @@
 #include "Guard.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "IntruderMulti/Characters/TP_Characters/Thief.h"
 
 AGuard::AGuard(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -37,4 +38,14 @@ void AGuard::SetupPlayerInputComponent(class UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+bool AGuard::Capture_Validate(AThief* Thief)
+{
+	return true;
+}
+
+void AGuard::Capture_Implementation(AThief* Thief)
+{
+	Thief->GotCaught(this);
 }

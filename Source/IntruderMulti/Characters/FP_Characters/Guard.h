@@ -18,6 +18,10 @@ public:
 
 	AGuard(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	/** Called when the guard catches a thief **/
+	UFUNCTION(Server, Reliable, WithValidation)
+	virtual void Capture(class AThief* Thief);
+
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 

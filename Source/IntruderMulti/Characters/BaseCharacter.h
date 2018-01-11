@@ -52,6 +52,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(NetMulticast, Reliable)
+	virtual void OnDeath();
+
 	virtual void SetRagdollPhysics();
 
 	void TypeChatMessage();

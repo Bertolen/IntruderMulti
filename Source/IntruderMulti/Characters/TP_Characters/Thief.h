@@ -25,13 +25,13 @@ public:
 	/** Handles stafing movement, left and right */
 	virtual void MoveRight(float Val) override;
 
-	/** Called when the thief is captured by a guard **/
-	UFUNCTION(Server, Reliable, WithValidation)
-	virtual void Capture(class AGuard* Catcher);
-
 	/** Called when the thief grabs a valuable object **/
 	UFUNCTION(Server, Reliable, WithValidation)
 	virtual void GrabAValuable(class AValuableItem* Item);
+
+	/** Called when the thief got caught by a guard **/
+	UFUNCTION(Server, Reliable, WithValidation)
+		virtual void GotCaught(class AGuard* Catcher);
 
 	/////////////////////////////
 	// UsableInterface
@@ -50,6 +50,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
 	FORCEINLINE bool GetIsCarryingAValuable() const { return bIsCarryingAValuable; }
+
+	FORCEINLINE TSubclassOf<AValuableItem> GetValuableClass() const { return ValuableClass; }
 
 	////// Setters
 

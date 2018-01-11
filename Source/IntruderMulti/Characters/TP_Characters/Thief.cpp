@@ -111,35 +111,18 @@ bool AThief::CanBeUsed(ACharacter* User)
 // This function will be called when the user uses the object
 void AThief::OnUsed(ACharacter* User)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Thief OnUsed")));
+	UE_LOG(IntruderDebug, Verbose, TEXT("OnUsed - Begin"));
+
 	AGuard* Guard = Cast<AGuard>(User);
 	if (!Guard) {
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("User is not a guard, bye bye ")));
 		return;
 	}
 
-	Capture(Guard);
+	Guard->Capture(this);
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("OnUsed - End"));
 }
 ////////////////////////
-
-bool AThief::Capture_Validate(AGuard* Catcher)
-{
-	return true;
-}
-
-void AThief::Capture_Implementation(AGuard* Catcher)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Capture Implementation")));
-	if (bIsCarryingAValuable) {
-		// Spawn the valuable at the thief's location
-		AValuableItem * Valuable = GetWorld()->SpawnActor<AValuableItem>(ValuableClass, GetActorTransform());
-		Valuable->SetCanBeUsedByGuard(true);
-	}
-
-	// destroy the pawn
-	SetRagdollPhysics();
-	//Destroy();
-}
 
 bool AThief::GrabAValuable_Validate(AValuableItem* Item)
 {
@@ -152,4 +135,25 @@ void AThief::GrabAValuable_Implementation(AValuableItem* Item)
 	SetValuableClass(Item->StaticClass());
 	
 	Item->MulticastDestroy();
+}
+
+bool AThief::GotCaught_Validate(class AGuard* Catcher)
+{
+	return true;
+}
+
+void AThief::GotCaught_Implementation(class AGuard* Catcher)
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("GotCaught_Implementation - Begin"));
+
+	if (bIsCarryingAValuable) {
+		// Spawn the valuable at the thief's location
+		AValuableItem * Valuable = GetWorld()->SpawnActor<AValuableItem>(GetValuableClass(), GetActorTransform());
+		Valuable->SetCanBeUsedByGuard(true);
+	}
+
+	// kill the pawn
+	OnDeath();
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("GotCaught_Implementation - End"));
 }

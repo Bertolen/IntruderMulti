@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "IntruderMulti.h"
 #include "Interface.h"
 #include "UsableInterface.generated.h"
 

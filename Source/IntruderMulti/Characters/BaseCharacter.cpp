@@ -178,13 +178,16 @@ void ABaseCharacter::TypeChatMessage()
 	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
 }
 
-void ABaseCharacter::SetRagdollPhysics_Implementation()
+void ABaseCharacter::OnDeath_Implementation()
 {
-	bool bInRagdoll = false;
-	USkeletalMeshComponent* Mesh1P = GetMesh();
-
 	bReplicateMovement = false;
 	bTearOff = true;
+
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	USkeletalMeshComponent* Mesh1P = GetMesh();
 
 	if (Mesh1P)
 	{
@@ -193,6 +196,14 @@ void ABaseCharacter::SetRagdollPhysics_Implementation()
 	}
 
 	SetActorEnableCollision(true);
+
+	SetRagdollPhysics();
+}
+
+void ABaseCharacter::SetRagdollPhysics()
+{
+	bool bInRagdoll = false;
+	USkeletalMeshComponent* Mesh1P = GetMesh();
 
 	if (IsPendingKill())
 	{
@@ -225,11 +236,6 @@ void ABaseCharacter::SetRagdollPhysics_Implementation()
 		// Immediately hide the pawn
 		TurnOff();
 		SetActorHiddenInGame(true);
-		/*SetLifeSpan(1.0f);
-	}
-	else
-	{
-		SetLifeSpan(10.0f);*/
 	}
 }
 
