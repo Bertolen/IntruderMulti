@@ -4,6 +4,7 @@
 #include "IntruderMulti/PlayerController/GameplayPC.h"
 #include "IntruderMulti/PlayerController/LobbyPC.h"
 #include "IntruderMulti/GameInstance/GameInfoInstance.h"
+#include "IntruderMulti/Characters/FP_Characters/Guard.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -74,10 +75,53 @@ void AGameplayGM::RespawnPlayer_Implementation(APlayerController* PlayerControll
 		PlayerController->GetPawn()->Destroy();
 	}
 
-	// Find a random point to spawn the character
+	// Find out the character's team
+	bool bIsGuard = false;
+	AGuard* Guard = Cast<AGuard>(CharacterClass.GetDefaultObject());
+	if (Guard) {
+		bIsGuard = true;
+	}
+
+	// Find all the spawn points
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), SpawnPoints);
-	int RandomIndex = UKismetMathLibrary::RandomIntegerInRange(0, SpawnPoints.Num() - 1);
-	FTransform SpawnTransform = SpawnPoints[RandomIndex]->GetActorTransform();
+
+	// Find the spawn points that don't match our team
+	TArray<AActor*> SpawnsToRemove;
+	for (int i = 0; i < SpawnPoints.Num(); i++)
+	{
+		APlayerStart * PlayerStart = Cast<APlayerStart>(SpawnPoints[i]);
+		if (!PlayerStart) {
+			UE_LOG(IntruderDebug, Error, TEXT("SpawnPoint is not a PlayerStart object."));
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, "SpawnPoint is not a PlayerStart object.");
+			continue;
+		}
+
+		// add the unmatching actors to the remove list
+		if (bIsGuard && PlayerStart->PlayerStartTag != "Guard") {
+			SpawnsToRemove.Add(SpawnPoints[i]);
+		}
+		else if (!bIsGuard && PlayerStart->PlayerStartTag != "Thief") {
+			SpawnsToRemove.Add(SpawnPoints[i]);
+		}
+	}
+
+	// Exclude the spawn points in the list
+	for (int i = 0; i < SpawnsToRemove.Num(); i++)
+	{
+		SpawnPoints.Remove(SpawnsToRemove[i]);
+	}
+
+	// Find a random spawn point in the remaining list
+	FTransform SpawnTransform;
+	if (SpawnPoints.Num()) {
+		int RandomIndex = UKismetMathLibrary::RandomIntegerInRange(0, SpawnPoints.Num() - 1);
+		SpawnTransform = SpawnPoints[RandomIndex]->GetActorTransform();
+	}
+	else {
+		UE_LOG(IntruderDebug, Error, TEXT("No spawn points left. Spawning at origin by default."));
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "No spawn points left. Spawning at origin by default.");
+		SpawnTransform = FTransform::Identity;
+	}
 
 	// Spawn the character
 	ACharacter * NewCharacter;
