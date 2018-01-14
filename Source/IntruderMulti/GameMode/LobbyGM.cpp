@@ -185,7 +185,7 @@ void ALobbyGM::LaunchTheGame()
 		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), FString("servertravel /Game/Maps/Arena01"), UGameplayStatics::GetPlayerController(GetWorld(), 0));
 		break;
 	case 1:
-		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), FString("servertravel /Game/Maps/Arena02"), UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), FString("servertravel /Game/Maps/Consulate"), UGameplayStatics::GetPlayerController(GetWorld(), 0));
 		break;
 	default:
 		break;
