@@ -93,7 +93,7 @@ void UGameInfoInstance::LaunchLobby(int NumberOfPlayers, bool EnableLan, FText S
 	ServerName = ServerText;
 
 	ShowLoadingScreen();
-	HostSession(GetFirstGamePlayer()->GetPreferredUniqueNetId(), GameSessionName, true, true, NumberOfPlayers);
+	HostSession(GetFirstGamePlayer()->GetPreferredUniqueNetId(), GameSessionName, EnableLan, true, NumberOfPlayers);
 }
 
 void UGameInfoInstance::ShowLoadingScreen()

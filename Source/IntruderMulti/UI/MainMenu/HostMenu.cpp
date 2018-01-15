@@ -12,8 +12,8 @@ UHostMenu::UHostMenu(const FObjectInitializer& ObjectInitializer)
 {
 	NumberOfPlayers = 2;
 	MaxNumberOfPlayers = 8;
-	EnableLAN = true;
-	PlayModeText = FText::FromString("LAN");
+	EnableLAN = false;
+	PlayModeText = FText::FromString("INTERNET");
 }
 
 void UHostMenu::NativeConstruct()

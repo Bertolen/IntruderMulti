@@ -29,8 +29,8 @@ void UServerMenu::NativeConstruct()
 
 	GameInstanceRef = GameInstance;
 
-	PlayModeText = "LAN";
-	EnableLAN = true;
+	PlayModeText = "INTERNET";
+	EnableLAN = false;
 }
 
 void UServerMenu::SetSearchModeLAN()
