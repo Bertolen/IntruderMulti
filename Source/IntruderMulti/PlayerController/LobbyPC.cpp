@@ -34,9 +34,12 @@ void ALobbyPC::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifet
 void ALobbyPC::SetupInputComponent()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("SetupInputComponent - Begin"));
+	
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("ToggleDisplayMenus", IE_Released, this, &ALobbyPC::ToggleDisplay);
+	InputComponent->BindAction("ToggleDisplayMenus", IE_Pressed, this, &ALobbyPC::ToggleDisplay);
+	InputComponent->BindAction("TypeChatMessage", IE_Pressed, this, &ALobbyPC::TypeChatMessage);
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("SetupInputComponent - End"));
 }
 
@@ -59,12 +62,12 @@ void ALobbyPC::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	UE_LOG(IntruderDebug, Verbose, TEXT("EndPlay - End"));
 }
 
-void ALobbyPC::AssignPlayer(TSubclassOf<ACharacter> Character, UTexture2D * CharacterImage)
+void ALobbyPC::AssignPlayer(TSubclassOf<ACharacter> NewCharacter, UTexture2D * NewCharacterImage)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("AssignPlayer - Begin"));
 
-	PlayerSettings.MyPlayerCharacter = Character;
-	PlayerSettings.MyPlayerCharacterImage = CharacterImage;
+	PlayerSettings.MyPlayerCharacter = NewCharacter;
+	PlayerSettings.MyPlayerCharacterImage = NewCharacterImage;
 
 	CallUpdate(PlayerSettings, false);
 
@@ -107,6 +110,17 @@ void ALobbyPC::ToggleDisplay()
 	LobbyMenuWB->ToggleDisplay();
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
+}
+
+void ALobbyPC::TypeChatMessage()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - Begin"));
+
+	if (LobbyMenuWB && LobbyMenuWB->GetChatWindowWB()) {
+		LobbyMenuWB->GetChatWindowWB()->StartTyping(false);
+	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
 }
 
 ////////////// Clients Functions

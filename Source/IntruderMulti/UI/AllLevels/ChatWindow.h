@@ -21,7 +21,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void CommitText(FText Text);
 
-	void StartTyping();
+	void StartTyping(bool TakeMouse);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (BlueprintProtected = "true"))
@@ -32,4 +32,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ChatWindow|WidgetClasses", meta = (BlueprintProtected = "true"))
 		TSubclassOf<class UChatText> ChatTextClass;
+
+	UPROPERTY()
+		bool bTakeMouse;
 };

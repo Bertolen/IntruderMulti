@@ -35,6 +35,9 @@ public:
 	UFUNCTION()
 	void ToggleDisplay();
 
+	UFUNCTION()
+	void TypeChatMessage();
+
 	////// Client functions
 
 	UFUNCTION(Client, Reliable)

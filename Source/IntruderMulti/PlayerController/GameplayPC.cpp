@@ -40,21 +40,12 @@ void AGameplayPC::BeginPlay()
 	UE_LOG(IntruderDebug, Verbose, TEXT("BeginPlay - End"));
 }
 
-void AGameplayPC::ToggleDisplay()
-{
-	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - Begin"));
-
-	bShowMouseCursor = !bShowMouseCursor;
-
-	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
-}
-
 void AGameplayPC::TypeChatMessage()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - Begin"));
 
 	if (GameplayMenuWB && GameplayMenuWB->GetChatWindow()) {
-		GameplayMenuWB->GetChatWindow()->StartTyping();
+		GameplayMenuWB->GetChatWindow()->StartTyping(true);
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
@@ -152,12 +143,12 @@ void AGameplayPC::ShowMenuWindow()
 	UE_LOG(IntruderDebug, Verbose, TEXT("ShowMenuWindow - End"));
 }
 
-void AGameplayPC::UpdateChat_Implementation(const FText &  SenderName, const FText &  SenderText)
+void AGameplayPC::UpdateChat_Implementation(const FText & _SenderName, const FText & _SenderText)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateChat_Implementation - Begin"));
 
 	if (GameplayMenuWB && GameplayMenuWB->GetChatWindow()) {
-		GameplayMenuWB->GetChatWindow()->UpdateChatWindow(SenderName, SenderText);
+		GameplayMenuWB->GetChatWindow()->UpdateChatWindow(_SenderName, _SenderText);
 	}
 	else {
 		UE_LOG(IntruderDebug, Warning, TEXT("Gameplay Chat Window not found. Messages won't appear on screen."));

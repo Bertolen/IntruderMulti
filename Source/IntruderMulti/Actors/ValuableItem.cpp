@@ -74,5 +74,5 @@ void AValuableItem::ReturnToSpawnTransform_Implementation()
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("Return to spawn transform"));
 	SetActorTransform(SpawnTransform);
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
-	GetMesh()->SetPhysicsAngularVelocity(FVector::ZeroVector);
+	GetMesh()->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 }

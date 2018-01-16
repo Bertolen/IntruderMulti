@@ -67,7 +67,6 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &ABaseCharacter::Use);
 
 	// Bind UI action
-	PlayerInputComponent->BindAction("ToggleDisplayMenus", IE_Pressed, this, &ABaseCharacter::ToggleDisplay);
 	PlayerInputComponent->BindAction("ShowInGameMenu", IE_Pressed, this, &ABaseCharacter::ShowGameplayMenu);
 	PlayerInputComponent->BindAction("TypeChatMessage", IE_Pressed, this, &ABaseCharacter::TypeChatMessage);
 }
@@ -148,20 +147,6 @@ void ABaseCharacter::ShowGameplayMenu()
 	GameplayPC->ShowMenuWindow();
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("ShowGameplayMenu - End"));
-}
-
-void ABaseCharacter::ToggleDisplay()
-{
-	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - Begin"));
-	
-	AGameplayPC* GameplayPC = Cast<AGameplayPC>(GetController());
-	if (!GameplayPC) {
-		return;
-	}
-
-	GameplayPC->ToggleDisplay();
-
-	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
 }
 
 void ABaseCharacter::TypeChatMessage()

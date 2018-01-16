@@ -24,9 +24,6 @@ public:
 	UFUNCTION()
 		void TypeChatMessage();
 
-	UFUNCTION()
-		void ToggleDisplay();
-
 	UFUNCTION(Server, Reliable, WithValidation)
 		void PassCharacterInfoToServer(FPlayerInfo PlayerSettingsInfo);
 

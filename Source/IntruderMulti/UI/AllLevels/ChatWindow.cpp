@@ -49,23 +49,31 @@ void UChatWindow::CommitText(FText Text)
 	ChatEntryWB->SetVisibility(ESlateVisibility::Hidden);
 
 	// Change the input mode so the player can control his character properly again
-	FInputModeGameOnly InputMode;
-	GetOwningPlayer()->SetInputMode(InputMode);
+	if (bTakeMouse) {
+		FInputModeGameOnly InputMode;
+		GetOwningPlayer()->SetInputMode(InputMode);
+	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("CommitText - End"));
 }
 
-void UChatWindow::StartTyping()
+void UChatWindow::StartTyping(bool TakeMouse)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("StartTyping - Begin"));
 	
 	ChatEntryWB->SetVisibility(ESlateVisibility::Visible);
 
-	FInputModeGameAndUI InputMode;
-	InputMode.SetWidgetToFocus(ChatEntryWB->GetCachedWidget());
-	InputMode.SetHideCursorDuringCapture(true);
-	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
-	GetOwningPlayer()->SetInputMode(InputMode);
+	bTakeMouse = TakeMouse;
+	if (bTakeMouse) {
+		FInputModeGameAndUI InputMode;
+		InputMode.SetWidgetToFocus(ChatEntryWB->GetCachedWidget());
+		InputMode.SetHideCursorDuringCapture(true);
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
+		GetOwningPlayer()->SetInputMode(InputMode);
+	}
+	else {
+		ChatEntryWB->SetUserFocus(GetOwningPlayer());
+	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("StartTyping - End"));
 }
