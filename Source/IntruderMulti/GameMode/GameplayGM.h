@@ -22,6 +22,8 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void RespawnPlayer(APlayerController* PlayerController, TSubclassOf<ACharacter> Character);
 
+	void OneLessThief();
+
 	void ThievesWin();
 
 	void GuardsWin();
@@ -38,4 +40,7 @@ private:
 
 	UPROPERTY()
 		TArray<AActor*> SpawnPoints;
+
+	UPROPERTY()
+		int NbRemainingThieves;
 };

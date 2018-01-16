@@ -6,6 +6,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "IntruderMulti/Characters/FP_Characters/Guard.h"
+#include "IntruderMulti/GameMode/GameplayGM.h"
 
 AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -147,6 +148,12 @@ void AThief::GotCaught_Implementation(class AGuard* Catcher)
 		AValuableItem * Valuable = GetWorld()->SpawnActor<AValuableItem>(GetValuableClass(), GetActorTransform());
 		Valuable->SetCanBeUsedByGuard(true);
 		Valuable->SetSpawnTransform(ValuableSpawnTransform);
+	}
+
+	// Inform the game state there's one less thief
+	AGameplayGM * GameplayGM = Cast<AGameplayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GameplayGM) {
+		GameplayGM->OneLessThief();
 	}
 
 	// kill the pawn

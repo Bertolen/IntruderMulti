@@ -5,6 +5,7 @@
 #include "IntruderMulti/PlayerController/LobbyPC.h"
 #include "IntruderMulti/GameInstance/GameInfoInstance.h"
 #include "IntruderMulti/Characters/FP_Characters/Guard.h"
+#include "IntruderMulti/Characters/TP_Characters/Thief.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -36,6 +37,11 @@ void AGameplayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerContro
 	}
 
 	GameplayPC->InitFromLobbyPC(LobbyPC);
+
+	AThief* isThief = Cast<AThief>(LobbyPC->PlayerSettings.MyPlayerCharacter.GetDefaultObject());
+	if (isThief) {
+		NbRemainingThieves++;
+	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("SwapPlayerControllers - End"));
 }
@@ -154,6 +160,15 @@ void AGameplayGM::GuardsWin()
 	DisplayWinText("All thieves have been captured!");
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("GuardsWin - End"));
+}
+
+void AGameplayGM::OneLessThief()
+{
+	NbRemainingThieves--;
+
+	if (!NbRemainingThieves) {
+		GuardsWin();
+	}
 }
 
 bool AGameplayGM::DisplayWinText_Validate(const FString & WinText)
