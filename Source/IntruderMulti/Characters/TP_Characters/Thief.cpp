@@ -31,6 +31,9 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset (to avoid direct content references in C++)
+	
+	// Thieves can crouch
+	GetMovementComponent()->NavAgentProps.bCanCrouch = true;
 
 	// Init some values
 	UsingReach += CameraBoom->TargetArmLength;

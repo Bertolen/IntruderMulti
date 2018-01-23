@@ -25,9 +25,13 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// Set some default values
 	UsingReach = 200.0f;
-	WalkingSpeed = 200.0f;
 	RunningSpeed = 600.0f;
 	bIsRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+
+	// Setup the speed for the editor
+	WalkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = WalkingSpeed / 2;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor ABaseCharacter - End"));
 }
@@ -37,9 +41,6 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Setup the speed for the editor
-	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-	GetCharacterMovement()->MaxWalkSpeedCrouched = WalkingSpeed / 2;
 }
 
 // Called every frame
@@ -72,6 +73,9 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	// Bind running events
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);
+
+	// Bind crouching events
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABaseCharacter::ToggleCrouch);
 
 	// Bind special actions
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &ABaseCharacter::Use);
@@ -239,17 +243,26 @@ void ABaseCharacter::StartRunning()
 	bIsRunning = true;
 	GetCharacterMovement()->MaxWalkSpeed = FMath::Max(WalkingSpeed, RunningSpeed);
 
-	// TODO
 	// We can't run and crouch at the same time!
-	/*if (bIsCrouched) {
+	if (bIsCrouched) {
 		ToggleCrouch();
-	}*/
+	}
 }
 
 void ABaseCharacter::StopRunning()
 {
 	bIsRunning = false;
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+}
+
+void ABaseCharacter::ToggleCrouch()
+{
+	if (bIsCrouched) {
+		UnCrouch();
+	}
+	else if (!bIsRunning) { // can't crouch and run at the same time
+		Crouch();
+	}
 }
 
 ////////////////////////////

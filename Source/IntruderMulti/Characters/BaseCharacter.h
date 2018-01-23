@@ -31,9 +31,14 @@ public:
 	/** Updates the focus line and sets the new focused usable item**/
 	virtual void UpdateFocusLine();
 
+	UFUNCTION()
 	void StartRunning();
 
+	UFUNCTION()
 	void StopRunning();
+
+	UFUNCTION()
+	void ToggleCrouch();
 
 	/////////////////////////////
 	// UsableInterface
@@ -77,9 +82,6 @@ protected:
 
 	////// Movement variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		float WalkingSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		float RunningSpeed;
 
 private:
@@ -92,4 +94,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		bool bIsRunning;
+
+	UPROPERTY()
+		float WalkingSpeed;
 };
