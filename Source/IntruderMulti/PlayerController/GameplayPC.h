@@ -25,7 +25,7 @@ public:
 		void TypeChatMessage();
 
 	UFUNCTION(Server, Reliable, WithValidation)
-		void PassCharacterInfoToServer(FPlayerInfo PlayerSettingsInfo);
+		void PassCharacterInfoToServer();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 		void GetChatMessage(const FText & Text);

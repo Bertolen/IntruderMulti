@@ -33,6 +33,9 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 		virtual void GotCaught(class AGuard* Catcher);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+		void RespawnPlayer();
+
 	/////////////////////////////
 	// UsableInterface
 
@@ -77,4 +80,10 @@ private:
 
 	UPROPERTY()
 	FTransform ValuableSpawnTransform;
+
+	UPROPERTY()
+	FTimerHandle RespawnTimerHandle;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (AllowPrivateAccess = "true"))
+	float RespawnTime;
 };

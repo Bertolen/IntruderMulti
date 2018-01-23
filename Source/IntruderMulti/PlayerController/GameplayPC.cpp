@@ -31,7 +31,7 @@ void AGameplayPC::BeginPlay()
 	if (IsLocalController()) {
 		UWidgetLayoutLibrary::RemoveAllWidgets(this);
 
-		PassCharacterInfoToServer(PlayerSettings);
+		PassCharacterInfoToServer();
 
 		FInputModeGameOnly InputMode;
 		SetInputMode(InputMode);
@@ -51,16 +51,15 @@ void AGameplayPC::TypeChatMessage()
 	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
 }
 
-bool AGameplayPC::PassCharacterInfoToServer_Validate(FPlayerInfo PlayerSettingsInfo)
+bool AGameplayPC::PassCharacterInfoToServer_Validate()
 {
 	return true;
 }
 
-void AGameplayPC::PassCharacterInfoToServer_Implementation(FPlayerInfo PlayerSettingsInfo)
+void AGameplayPC::PassCharacterInfoToServer_Implementation()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("PassCharacterInfoToServer_Implementation - Begin"));
 
-	PlayerSettings = PlayerSettingsInfo;
 	SenderName = FText::FromString(PlayerSettings.MyPlayerName);
 
 	if (!PlayerSettings.MyPlayerCharacter) {
@@ -116,8 +115,8 @@ void AGameplayPC::SetupMenuWindow_Implementation()
 	if (GameplayMenuClass != nullptr) { // check if our widget class exists, else we'll crash
 		if (GameplayMenuWB == nullptr) { // init the widget
 			GameplayMenuWB = CreateWidget<UGameplayMenu>(GetWorld(), GameplayMenuClass);
+			GameplayMenuWB->AddToViewport();
 		}
-		GameplayMenuWB->AddToViewport();
 
 		// hide the menu
 		GameplayMenuWB->Hide();

@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "IntruderMulti/Characters/FP_Characters/Guard.h"
 #include "IntruderMulti/GameMode/GameplayGM.h"
+#include "IntruderMulti/PlayerController/GameplayPC.h"
 
 AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -34,6 +35,7 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	// Init some values
 	UsingReach += CameraBoom->TargetArmLength;
 	bIsCarryingAValuable = false;
+	RespawnTime = 30.0f;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - End"));
 }
@@ -159,5 +161,21 @@ void AThief::GotCaught_Implementation(class AGuard* Catcher)
 	// kill the pawn
 	OnDeath();
 
+	// Set the time to respawn
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AThief::RespawnPlayer, RespawnTime);
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("GotCaught_Implementation - End"));
+}
+
+bool AThief::RespawnPlayer_Validate()
+{
+	return true;
+}
+
+void AThief::RespawnPlayer_Implementation()
+{
+	AGameplayPC * GameplayPC = Cast<AGameplayPC>(GetController());
+	if (GameplayPC) {
+		GameplayPC->PassCharacterInfoToServer();
+	}
 }
