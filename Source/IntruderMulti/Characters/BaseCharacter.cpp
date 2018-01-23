@@ -25,6 +25,9 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// Set some default values
 	UsingReach = 200.0f;
+	WalkingSpeed = 200.0f;
+	RunningSpeed = 600.0f;
+	bIsRunning = false;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor ABaseCharacter - End"));
 }
@@ -33,7 +36,10 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Setup the speed for the editor
+	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = WalkingSpeed / 2;
 }
 
 // Called every frame
@@ -62,6 +68,10 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+	// Bind running events
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);
 
 	// Bind special actions
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &ABaseCharacter::Use);
@@ -222,6 +232,24 @@ void ABaseCharacter::SetRagdollPhysics()
 		TurnOff();
 		SetActorHiddenInGame(true);
 	}
+}
+
+void ABaseCharacter::StartRunning()
+{
+	bIsRunning = true;
+	GetCharacterMovement()->MaxWalkSpeed = FMath::Max(WalkingSpeed, RunningSpeed);
+
+	// TODO
+	// We can't run and crouch at the same time!
+	/*if (bIsCrouched) {
+		ToggleCrouch();
+	}*/
+}
+
+void ABaseCharacter::StopRunning()
+{
+	bIsRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 }
 
 ////////////////////////////
