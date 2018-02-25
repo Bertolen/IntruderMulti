@@ -29,6 +29,10 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	bIsRunning = false;
 	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 
+	// Init the Audio Component
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	AudioComponent->SetAutoActivate(false);
+
 	// Setup the speed for the editor
 	WalkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = WalkingSpeed / 2;
@@ -263,6 +267,12 @@ void ABaseCharacter::ToggleCrouch()
 	else if (!bIsRunning) { // can't crouch and run at the same time
 		Crouch();
 	}
+}
+
+void ABaseCharacter::PlaySound(USoundWave* sound)
+{
+	AudioComponent->Sound = sound;
+	AudioComponent->Play();
 }
 
 ////////////////////////////

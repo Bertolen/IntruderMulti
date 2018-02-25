@@ -32,6 +32,8 @@ public:
 
 	FORCEINLINE FTransform GetSpawnTransform() const { return SpawnTransform; }
 
+	FORCEINLINE USoundWave * GetTakenSound() const { return TakenSound; }
+
 	////// Setters
 
 	FORCEINLINE void SetSpawnTransform(const FTransform _SpawnTransform) { SpawnTransform = _SpawnTransform; }
@@ -43,5 +45,7 @@ protected:
 private:
 
 	FTransform SpawnTransform;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		USoundWave* TakenSound;	
 };
