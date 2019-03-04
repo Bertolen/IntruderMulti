@@ -40,5 +40,5 @@ void UMainMenu::ShowOptionsMenu()
 
 void UMainMenu::QuitGame()
 {
-	UKismetSystemLibrary::QuitGame(GetOwningPlayer()->GetWorld(), GetOwningPlayer(), EQuitPreference::Quit);
+	UKismetSystemLibrary::QuitGame(GetOwningPlayer()->GetWorld(), GetOwningPlayer(), EQuitPreference::Quit, false);
 }

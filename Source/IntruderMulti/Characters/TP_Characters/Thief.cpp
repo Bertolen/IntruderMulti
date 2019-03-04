@@ -134,7 +134,6 @@ void AThief::GrabAValuable_Implementation(AValuableItem* Item)
 	SetIsCarryingAValuable(true);
 	SetValuableClass(Item->GetClass());
 	ValuableSpawnTransform = Item->GetSpawnTransform();
-	PlaySound(Item->GetTakenSound());
 	
 	Item->MulticastDestroy();
 }

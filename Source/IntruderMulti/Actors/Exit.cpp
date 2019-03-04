@@ -21,7 +21,7 @@ AExit::AExit()
 	// Setup the climb volume
 	ExitVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("ExitVolume"));
 	ExitVolume->SetupAttachment(GetMesh());
-	ExitVolume->bGenerateOverlapEvents = true;
+	ExitVolume->SetGenerateOverlapEvents(true);
 	ExitVolume->SetCollisionResponseToAllChannels(ECR_Overlap);
 	ExitVolume->OnComponentBeginOverlap.AddDynamic(this, &AExit::OnOverlapBegin);
 }

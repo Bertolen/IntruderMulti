@@ -67,8 +67,6 @@ protected:
 
 	void TypeChatMessage();
 
-	void PlaySound(USoundWave* sound);
-
 private:
 	// This method uses the usable item on focus
 	UFUNCTION(BlueprintCallable, Category = "Hability")
@@ -100,6 +98,6 @@ private:
 	UPROPERTY()
 		float WalkingSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		UAudioComponent * AudioComponent;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	//	UAudioComponent * AudioComponent;
 };

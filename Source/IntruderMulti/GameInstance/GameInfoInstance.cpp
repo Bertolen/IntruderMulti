@@ -244,7 +244,7 @@ void UGameInfoInstance::DisplayErrorMessage(FString ErrorMessage)
 	}
 }
 
-bool UGameInfoInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
+bool UGameInfoInstance::HostSession(FUniqueNetIdRepl UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
 {
 	// Get the Online Subsystem to work with
 	IOnlineSubsystem* const OnlineSub = IOnlineSubsystem::Get();
@@ -343,7 +343,7 @@ void UGameInfoInstance::OnStartOnlineGameComplete(FName SessionName, bool bWasSu
 	}
 }
 
-void UGameInfoInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence, int MaxResults)
+void UGameInfoInstance::FindSessions(FUniqueNetIdRepl UserId, bool bIsLAN, bool bIsPresence, int MaxResults)
 {
 	// Get the OnlineSubsystem we want to work with
 	IOnlineSubsystem* OnlineSub = IOnlineSubsystem::Get();
@@ -420,7 +420,7 @@ void UGameInfoInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	}
 }
 
-bool UGameInfoInstance::JoinSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult)
+bool UGameInfoInstance::JoinSession(FUniqueNetIdRepl UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult)
 {
 	// Return bool
 	bool bSuccessful = false;

@@ -176,7 +176,7 @@ public:
 	*	@Param		bIsPresence		"Is the Session to create a presence Session"
 	*	@Param		MaxNumPlayers	        Number of Maximum allowed players on this "Session" (Server)
 	*/
-	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
+	bool HostSession(FUniqueNetIdRepl UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
 
 	/**
 	*	Function fired when a session create request has completed
@@ -202,7 +202,7 @@ public:
 	*	@param bIsPresence are we searching presence sessions
 	*	@param MaxResults Number of maximum sessions to find
 	*/
-	void FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence, int MaxResults);
+	void FindSessions(FUniqueNetIdRepl UserId, bool bIsLAN, bool bIsPresence, int MaxResults);
 
 	/**
 	*	Delegate fired when a session search query has completed
@@ -219,7 +219,7 @@ public:
 	*
 	*	@return bool true if successful, false otherwise
 	*/
-	bool JoinSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult);
+	bool JoinSession(FUniqueNetIdRepl UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult);
 
 	/**
 	*	Delegate fired when a session join request has completed

@@ -61,6 +61,9 @@ void AValuableItem::OnUsed(ACharacter* Newuser)
 
 void AValuableItem::MulticastDestroy_Implementation()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, "MulticastDestroy");
+
+	UGameplayStatics::SpawnSoundAttached(GetTakenSound(), GetRootComponent());
 	Destroy();
 }
 
