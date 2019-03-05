@@ -74,7 +74,6 @@ void UServerMenu::StartSearch()
 	}
 	// Get the SessionInterface from our OnlineSubsystem
 	IOnlineSessionPtr Sessions = OnlineSub->GetSessionInterface();
-	//TSharedPtr<const FUniqueNetId> UserId = GetOwningPlayer()->GetLocalPlayer()->GetPreferredUniqueNetId();
 	FUniqueNetIdRepl UserId = GetOwningPlayer()->GetLocalPlayer()->GetPreferredUniqueNetId();
 
 	if (!Sessions.IsValid() || !UserId.IsValid()) {

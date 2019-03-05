@@ -29,7 +29,7 @@ AGuard::AGuard(const FObjectInitializer& ObjectInitializer)
 	Mesh1P->bOnlyOwnerSee = true;
 
 	// Guards run faster by default
-	RunningSpeed = 800.0f;
+	//RunningSpeed = 800.0f;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AGuard - End"));
 }

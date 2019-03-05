@@ -25,9 +25,9 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// Set some default values
 	UsingReach = 200.0f;
-	RunningSpeed = 600.0f;
-	bIsRunning = false;
-	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+	//RunningSpeed = 600.0f;
+	//bIsRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 
 	// Init the Audio Component
 	//AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
@@ -75,8 +75,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	// Bind running events
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);
+	/*PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);*/
 
 	// Bind crouching events
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABaseCharacter::ToggleCrouch);
@@ -242,29 +242,30 @@ void ABaseCharacter::SetRagdollPhysics()
 	}
 }
 
-void ABaseCharacter::StartRunning()
-{
-	bIsRunning = true;
-	GetCharacterMovement()->MaxWalkSpeed = FMath::Max(WalkingSpeed, RunningSpeed);
+//void ABaseCharacter::StartRunning()
+//{
+//	bIsRunning = true;
+//	GetCharacterMovement()->MaxWalkSpeed = FMath::Max(WalkingSpeed, RunningSpeed);
+//
+//	// We can't run and crouch at the same time!
+//	if (bIsCrouched) {
+//		ToggleCrouch();
+//	}
+//}
 
-	// We can't run and crouch at the same time!
-	if (bIsCrouched) {
-		ToggleCrouch();
-	}
-}
-
-void ABaseCharacter::StopRunning()
-{
-	bIsRunning = false;
-	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-}
+//void ABaseCharacter::StopRunning()
+//{
+//	bIsRunning = false;
+//	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+//}
 
 void ABaseCharacter::ToggleCrouch()
 {
 	if (bIsCrouched) {
 		UnCrouch();
 	}
-	else if (!bIsRunning) { // can't crouch and run at the same time
+	else //if (!bIsRunning) { // can't crouch and run at the same time
+	{
 		Crouch();
 	}
 }

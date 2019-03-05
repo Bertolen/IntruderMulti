@@ -58,29 +58,33 @@ AIntruderMultiCharacter::AIntruderMultiCharacter()
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
-	// Create VR Controllers.
-	R_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("R_MotionController"));
-	/*R_MotionController->Hand = EControllerHand::Right;*/
-	R_MotionController->SetupAttachment(RootComponent);
-	L_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("L_MotionController"));
-	L_MotionController->SetupAttachment(RootComponent);
+	// the following line turns motion controllers off by default:
+	bUsingMotionControllers = false;
 
-	// Create a gun and attach it to the right-hand VR controller.
-	// Create a gun mesh component
-	VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
-	VR_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
-	VR_Gun->bCastDynamicShadow = false;
-	VR_Gun->CastShadow = false;
-	VR_Gun->SetupAttachment(R_MotionController);
-	VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	if (bUsingMotionControllers) {
+		// Create VR Controllers.
+		R_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("R_MotionController"));
+		//R_MotionController->Hand = EControllerHand::Right;
+		R_MotionController->SetTrackingSource(EControllerHand::Right);
+		R_MotionController->SetupAttachment(RootComponent);
+		L_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("L_MotionController"));
+		L_MotionController->SetTrackingSource(EControllerHand::Left);
+		L_MotionController->SetupAttachment(RootComponent);
 
-	VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
-	VR_MuzzleLocation->SetupAttachment(VR_Gun);
-	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
-	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
+		// Create a gun and attach it to the right-hand VR controller.
+		// Create a gun mesh component
+		VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
+		VR_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
+		VR_Gun->bCastDynamicShadow = false;
+		VR_Gun->CastShadow = false;
+		VR_Gun->SetupAttachment(R_MotionController);
+		VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
-	// Uncomment the following line to turn motion controllers on by default:
-	//bUsingMotionControllers = true;
+		VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
+		VR_MuzzleLocation->SetupAttachment(VR_Gun);
+		VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
+		VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
+	}
 }
 
 void AIntruderMultiCharacter::BeginPlay()
