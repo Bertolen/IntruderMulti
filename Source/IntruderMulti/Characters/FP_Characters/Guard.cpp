@@ -30,6 +30,7 @@ AGuard::AGuard(const FObjectInitializer& ObjectInitializer)
 
 	// Guards run faster by default
 	//RunningSpeed = 800.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AGuard - End"));
 }

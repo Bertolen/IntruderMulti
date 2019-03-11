@@ -38,7 +38,7 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	// Init some values
 	UsingReach += CameraBoom->TargetArmLength;
 	bIsCarryingAValuable = false;
-	RespawnTime = 30.0f;
+	RespawnTime = 10.0f;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - End"));
 }
