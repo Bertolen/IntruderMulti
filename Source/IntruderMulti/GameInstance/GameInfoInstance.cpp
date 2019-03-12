@@ -41,6 +41,14 @@ void UGameInfoInstance::Init()
 	/** Errors handling **/
 	GetEngine()->OnNetworkFailure().AddUObject(this, &UGameInfoInstance::OnNetworkError);
 	GetEngine()->OnTravelFailure().AddUObject(this, &UGameInfoInstance::OnTravelError);
+
+	// Sets the game to be displayed on a 1280x720 window.
+	UGameUserSettings* GameSettings = UGameUserSettings::GetGameUserSettings();
+	if (GameSettings) {
+		GameSettings->SetScreenResolution(FIntPoint(1280, 720));
+		GameSettings->SetFullscreenMode(EWindowMode::Windowed);
+		GameSettings->ApplyResolutionSettings(false);
+	}
 }
 
 void UGameInfoInstance::ShowMainMenu()

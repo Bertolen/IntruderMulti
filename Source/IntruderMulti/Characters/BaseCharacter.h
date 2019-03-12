@@ -31,11 +31,11 @@ public:
 	/** Updates the focus line and sets the new focused usable item**/
 	virtual void UpdateFocusLine();
 
-	/*UFUNCTION()
-	void StartRunning();
+	UFUNCTION()
+	virtual void StartRunning();
 
 	UFUNCTION()
-	void StopRunning();*/
+	virtual void StopRunning();
 
 	UFUNCTION()
 	void ToggleCrouch();
@@ -80,10 +80,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hability", meta = (AllowPrivateAccess = "true"))
 		float UsingReach;
 
-	////// Movement variables
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		float RunningSpeed;*/
-
 private:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -92,12 +88,6 @@ private:
 	// Usable item on focus
 	IUsableInterface* FocusedUsable;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		bool bIsRunning;*/
-
 	UPROPERTY()
 		float WalkingSpeed;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	//	UAudioComponent * AudioComponent;
 };
