@@ -13,6 +13,7 @@ UIntruderMovementComponent::UIntruderMovementComponent(const FObjectInitializer&
 	bCanRun = false;
 	WalkingSpeed = 600.0f;
 	RunningSpeed = 800.0f;
+	Stamina = 100.0f;
 	MaxWalkSpeedCrouched = WalkingSpeed / 2;
 	MaxWalkSpeed = WalkingSpeed;
 }
@@ -24,6 +25,20 @@ void UIntruderMovementComponent::GetLifetimeReplicatedProps(TArray< FLifetimePro
 	DOREPLIFETIME(UIntruderMovementComponent, bIsRunning);
 }
 
+// TODO
+void UIntruderMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// Checks if the character has been running 
+	if (bIsRunning && GetLastUpdateVelocity().Size() > 1e-8f  && IsMovingOnGround()) {
+
+		// if so we're gonna use up stamina
+	}
+	else {
+		// if not we can recover some stamina
+	}
+}
 
 ///////////////////////// ACCESSORS ////////////////////////////
 
@@ -34,7 +49,6 @@ bool UIntruderMovementComponent::SetIsRunning_Validate(bool newValue)
 
 void UIntruderMovementComponent::SetIsRunning_Implementation(bool newValue) 
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Blue, FString::Printf(TEXT("Set is running")));
 	// if the character can't run, then we don't even try
 	if (!bCanRun) {
 		bIsRunning = false;
@@ -60,5 +74,5 @@ void UIntruderMovementComponent::SetIsRunning_Implementation(bool newValue)
 
 float UIntruderMovementComponent::GetStamina()
 {
-	return stamina;
+	return Stamina;
 }
