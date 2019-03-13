@@ -19,12 +19,9 @@ public :
 	UIntruderMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(Server, Reliable, WithValidation)
-		void SetIsRunning(bool newValue);
+	void SetIsRunning(bool newValue);
 
-	UFUNCTION()
-		float GetStamina();
-
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	float GetStamina();
 
 public:
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -40,6 +37,5 @@ private :
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		bool bIsRunning;
 
-	UPROPERTY()
-		float Stamina;
+	float stamina;
 };
