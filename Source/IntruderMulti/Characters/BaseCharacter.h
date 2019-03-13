@@ -28,9 +28,6 @@ public:
 	/** Handles stafing movement, left and right */
 	virtual void MoveRight(float Val);
 
-	/** Updates the focus line and sets the new focused usable item**/
-	virtual void UpdateFocusLine();
-
 	UFUNCTION()
 	void StartRunning();
 
@@ -56,6 +53,8 @@ public:
 
 	FORCEINLINE UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 
+	FORCEINLINE float GetStamina() const { return Stamina; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -66,6 +65,12 @@ protected:
 	virtual void SetRagdollPhysics();
 
 	void TypeChatMessage();
+
+	/** Updates the focus line and sets the new focused usable item**/
+	virtual void UpdateFocusLine();
+
+	/** Updates the stamina according to the character's curent state**/
+	virtual void UpdateStamina();
 
 private:
 	// This method uses the usable item on focus
@@ -99,4 +104,6 @@ private:
 	// Does the character wants to run
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		bool bIsRunning;
+
+	float Stamina;
 };
