@@ -40,6 +40,10 @@ AThief::AThief(const FObjectInitializer& ObjectInitializer)
 	bIsCarryingAValuable = false;
 	RespawnTime = 10.0f;
 
+	// Thieves can't run, they are always at max speed
+	GetCharacterMovement()->MaxWalkSpeed *= SpeedMultiplier;
+	SpeedMultiplier = 1.0f;
+
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AThief - End"));
 }
 

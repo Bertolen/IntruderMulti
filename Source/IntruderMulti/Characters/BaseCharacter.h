@@ -31,11 +31,11 @@ public:
 	/** Updates the focus line and sets the new focused usable item**/
 	virtual void UpdateFocusLine();
 
-	/*UFUNCTION()
+	UFUNCTION()
 	void StartRunning();
 
 	UFUNCTION()
-	void StopRunning();*/
+	void StopRunning();
 
 	UFUNCTION()
 	void ToggleCrouch();
@@ -80,9 +80,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hability", meta = (AllowPrivateAccess = "true"))
 		float UsingReach;
 
-	////// Movement variables
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		float RunningSpeed;*/
+	// Whether or not the character can run faster than his base walking speed
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		bool bCanRun;
+
+	// current desired speed ratio, 1 is max speed
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float SpeedMultiplier;
 
 private:
 	/** Follow camera */
@@ -92,12 +96,7 @@ private:
 	// Usable item on focus
 	IUsableInterface* FocusedUsable;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		bool bIsRunning;*/
-
-	UPROPERTY()
-		float WalkingSpeed;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	//	UAudioComponent * AudioComponent;
+	// Does the character wants to run
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		bool bIsRunning;
 };

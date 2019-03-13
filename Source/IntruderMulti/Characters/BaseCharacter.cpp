@@ -25,17 +25,13 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// Set some default values
 	UsingReach = 200.0f;
-	//RunningSpeed = 600.0f;
-	//bIsRunning = false;
-	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-
-	// Init the Audio Component
-	//AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
-	//AudioComponent->SetAutoActivate(false);
+	bIsRunning = false;
+	bCanRun = false;
+	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
+	SpeedMultiplier = 0.5f;
 
 	// Setup the speed for the editor
-	WalkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
-	GetCharacterMovement()->MaxWalkSpeedCrouched = WalkingSpeed / 2;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = GetCharacterMovement()->MaxWalkSpeed / 2;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor ABaseCharacter - End"));
 }
@@ -75,8 +71,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	// Bind running events
-	/*PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);*/
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);
 
 	// Bind crouching events
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABaseCharacter::ToggleCrouch);
@@ -94,7 +90,7 @@ void ABaseCharacter::MoveForward(float Value)
 	if (Value != 0.0f)
 	{
 		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value);
+		AddMovementInput(GetActorForwardVector(), Value * SpeedMultiplier);
 	}
 }
 
@@ -103,7 +99,7 @@ void ABaseCharacter::MoveRight(float Value)
 	if (Value != 0.0f)
 	{
 		// add movement in that direction
-		AddMovementInput(GetActorRightVector(), Value);
+		AddMovementInput(GetActorRightVector(), Value * SpeedMultiplier);
 	}
 }
 
@@ -184,7 +180,7 @@ void ABaseCharacter::TypeChatMessage()
 void ABaseCharacter::OnDeath_Implementation()
 {
 	bReplicateMovement = false;
-	bTearOff = true;
+	TearOff();
 
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -242,29 +238,39 @@ void ABaseCharacter::SetRagdollPhysics()
 	}
 }
 
-//void ABaseCharacter::StartRunning()
-//{
-//	bIsRunning = true;
-//	GetCharacterMovement()->MaxWalkSpeed = FMath::Max(WalkingSpeed, RunningSpeed);
-//
-//	// We can't run and crouch at the same time!
-//	if (bIsCrouched) {
-//		ToggleCrouch();
-//	}
-//}
+void ABaseCharacter::StartRunning()
+{
+	// check if the character can run
+	if (!bCanRun) {
+		return;
+	}
 
-//void ABaseCharacter::StopRunning()
-//{
-//	bIsRunning = false;
-//	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-//}
+	bIsRunning = true;
+	SpeedMultiplier = 1.0f;
+
+	// We can't run and crouch at the same time!
+	if (bIsCrouched) {
+		ToggleCrouch();
+	}
+}
+
+void ABaseCharacter::StopRunning()
+{
+	// check if the character can run
+	if (!bCanRun) {
+		return;
+	}
+
+	bIsRunning = false;
+	SpeedMultiplier = 0.5f;
+}
 
 void ABaseCharacter::ToggleCrouch()
 {
 	if (bIsCrouched) {
 		UnCrouch();
 	}
-	else //if (!bIsRunning) { // can't crouch and run at the same time
+	else // can't crouch and run at the same time
 	{
 		Crouch();
 	}
