@@ -19,9 +19,9 @@ void AIntruderMultiGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//// Sets the game to be displayed on a 1280x720 window.
-	//UGameUserSettings* GameSettings = UGameUserSettings::GetGameUserSettings();
-	//GameSettings->SetScreenResolution(FIntPoint(1280, 720));
-	//GameSettings->SetFullscreenMode(EWindowMode::Windowed);
-	//GameSettings->ApplyResolutionSettings(false);
+	// Sets the game to be displayed on a 1280x720 window.
+	UGameUserSettings* GameSettings = UGameUserSettings::GetGameUserSettings();
+	GameSettings->SetScreenResolution(FIntPoint(1280, 720));
+	GameSettings->SetFullscreenMode(EWindowMode::Windowed);
+	GameSettings->ApplyResolutionSettings(false);
 }

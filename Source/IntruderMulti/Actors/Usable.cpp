@@ -39,9 +39,12 @@ void AUsable::BeginPlay()
 // This function can be called to know if the object can be used or not by the given character
 bool AUsable::CanBeUsed(ACharacter* User)
 {
+	UE_LOG(IntruderDebug, Verbose, TEXT("CanBeUsed - Begin"));
+
 	AGuard * isGuard = Cast<AGuard>(User);
 	if (isGuard) {
 		if (bCanBeUsedByGuard) {
+			UE_LOG(IntruderDebug, Verbose, TEXT("CanBeUsed - true"));
 			return true;
 		}
 	}
@@ -49,17 +52,23 @@ bool AUsable::CanBeUsed(ACharacter* User)
 	AThief * isThief = Cast<AThief>(User);
 	if (isThief) {
 		if (bCanBeUsedByThief) {
+			UE_LOG(IntruderDebug, Verbose, TEXT("CanBeUsed - true"));
 			return true;
 		}
 	}
 
+	UE_LOG(IntruderDebug, Verbose, TEXT("CanBeUsed - false"));
 	return false;
 }
 
 // This function will be called when the user uses the object
 void AUsable::OnUsed(ACharacter* Newuser)
 {
+	UE_LOG(IntruderDebug, Verbose, TEXT("OnUsed - Begin"));
 
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Usable object used")));
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("OnUsed - End"));
 }
 
 ////// Setters

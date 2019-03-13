@@ -3,7 +3,6 @@
 #include "Guard.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "IntruderMulti/Components/IntruderMovementComponent.h"
 #include "IntruderMulti/Characters/TP_Characters/Thief.h"
 
 AGuard::AGuard(const FObjectInitializer& ObjectInitializer)
@@ -29,11 +28,9 @@ AGuard::AGuard(const FObjectInitializer& ObjectInitializer)
 	GetMesh()->bOwnerNoSee = true;
 	Mesh1P->bOnlyOwnerSee = true;
 
-	// Guards can run
-	UIntruderMovementComponent* movComp = Cast<UIntruderMovementComponent>(GetMovementComponent());
-	if (movComp) {
-		movComp->bCanRun = true;
-	}
+	// Guards run faster by default
+	//RunningSpeed = 800.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor AGuard - End"));
 }

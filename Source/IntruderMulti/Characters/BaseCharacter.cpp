@@ -2,12 +2,11 @@
 
 #include "BaseCharacter.h"
 #include "Components/CapsuleComponent.h"
-#include "IntruderMulti/Components/IntruderMovementComponent.h"
 #include "IntruderMulti/PlayerController/GameplayPC.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<UIntruderMovementComponent>(ACharacter::CharacterMovementComponentName))
+	: Super(ObjectInitializer)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor ABaseCharacter - Begin"));
 
@@ -26,6 +25,17 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// Set some default values
 	UsingReach = 200.0f;
+	//RunningSpeed = 600.0f;
+	//bIsRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+
+	// Init the Audio Component
+	//AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	//AudioComponent->SetAutoActivate(false);
+
+	// Setup the speed for the editor
+	WalkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = WalkingSpeed / 2;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor ABaseCharacter - End"));
 }
@@ -65,8 +75,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	// Bind running events
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);
+	/*PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::StartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::StopRunning);*/
 
 	// Bind crouching events
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABaseCharacter::ToggleCrouch);
@@ -174,7 +184,7 @@ void ABaseCharacter::TypeChatMessage()
 void ABaseCharacter::OnDeath_Implementation()
 {
 	bReplicateMovement = false;
-	TearOff();
+	bTearOff = true;
 
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -232,21 +242,22 @@ void ABaseCharacter::SetRagdollPhysics()
 	}
 }
 
-void ABaseCharacter::StartRunning()
-{
-	UIntruderMovementComponent* movComp = Cast<UIntruderMovementComponent>(GetMovementComponent());
-	if (movComp) {
-		movComp->SetIsRunning(true);
-	}
-}
+//void ABaseCharacter::StartRunning()
+//{
+//	bIsRunning = true;
+//	GetCharacterMovement()->MaxWalkSpeed = FMath::Max(WalkingSpeed, RunningSpeed);
+//
+//	// We can't run and crouch at the same time!
+//	if (bIsCrouched) {
+//		ToggleCrouch();
+//	}
+//}
 
-void ABaseCharacter::StopRunning()
-{
-	UIntruderMovementComponent* movComp = Cast<UIntruderMovementComponent>(GetMovementComponent());
-	if (movComp) {
-		movComp->SetIsRunning(false);
-	}
-}
+//void ABaseCharacter::StopRunning()
+//{
+//	bIsRunning = false;
+//	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+//}
 
 void ABaseCharacter::ToggleCrouch()
 {
