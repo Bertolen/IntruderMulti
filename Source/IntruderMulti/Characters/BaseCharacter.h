@@ -70,7 +70,7 @@ protected:
 	virtual void UpdateFocusLine();
 
 	/** Updates the stamina according to the character's curent state**/
-	virtual void UpdateStamina();
+	virtual void UpdateStamina(float DeltaTime);
 
 private:
 	// This method uses the usable item on focus
@@ -93,6 +93,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		float SpeedMultiplier;
 
+	// how fast the stamina decreases when running
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float StaminaDecreaseRate;
+
+	// how fast the stamina is restored
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float StaminaRestoreRate;
+
 private:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -105,5 +113,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		bool bIsRunning;
 
-	float Stamina;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float Stamina;
 };

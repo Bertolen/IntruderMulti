@@ -30,6 +30,8 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 	SpeedMultiplier = 0.5f;
 	Stamina = 100.0f;
+	StaminaDecreaseRate = 25.0f;
+	StaminaRestoreRate = 20.0f;
 
 	// Setup the speed for the editor
 	GetCharacterMovement()->MaxWalkSpeedCrouched = GetCharacterMovement()->MaxWalkSpeed / 2;
@@ -53,7 +55,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 	UpdateFocusLine();
 
 	// checks if we're currently running and uses stamina if necessary
-	UpdateStamina();
+	UpdateStamina(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -136,14 +138,30 @@ void ABaseCharacter::UpdateFocusLine()
 	FocusedUsable = Cast<IUsableInterface>(Hit.GetActor());
 }
 
-void ABaseCharacter::UpdateStamina()
+void ABaseCharacter::UpdateStamina(float DeltaTime)
 {
 	// is the character currently running?
+	if (bIsRunning && GetVelocity().Size() > 1e-5f) {
+	
 		// if it is then we consume some stamina
+		Stamina -= DeltaTime * StaminaDecreaseRate;
 
+		if (Stamina <= 0) {
 			// if we run out of stamina then we stop running
+			Stamina = 0;
+			StopRunning();
+		}
+	}
+	else {
+		// if the character isn't running then we restore some stamina
+		if (Stamina < 100.0f) {
+			Stamina += DeltaTime * StaminaRestoreRate;
 
-		// if it isn't we restore some stamina
+			if (Stamina > 100.0f) {
+				Stamina = 100.0f;
+			}
+		}
+	}
 }
 
 void ABaseCharacter::Use()
