@@ -48,6 +48,8 @@ public:
 
 	FORCEINLINE int GetTime() const { return AllTimes[TimeID]; }
 
+	FORCEINLINE FText GetTimeAsText() const { return FText::FromString(FString::Printf(TEXT("%d min"), GetTime())); }
+
 	FORCEINLINE TArray<UTexture2D*> GetAllCharacterImages() const { return AllCharacterImages; }
 
 	FORCEINLINE bool GetCanWeStart() const { return CanWeStart; }

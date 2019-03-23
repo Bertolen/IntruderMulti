@@ -194,7 +194,7 @@ void ALobbyPC::UpdateLobbySettings_Implementation()
 
 	LobbyMenuWB->MapImage = LobbyGS->GetMapImage();
 	LobbyMenuWB->MapName = LobbyGS->GetMapName();
-	LobbyMenuWB->MapTime = FText::FromString(FString::Printf(TEXT("%d min"), LobbyGS->GetTime()));
+	LobbyMenuWB->MapTime = LobbyGS->GetTimeAsText();
 
 	// gives the game instance the map time so we can then pass it to the gameplay gamemode
 	UGameInfoInstance * GameInstance = Cast<UGameInfoInstance>(UGameplayStatics::GetGameInstance(GetWorld()));

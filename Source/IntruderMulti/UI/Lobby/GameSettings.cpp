@@ -22,7 +22,7 @@ void UGameSettings::NativeConstruct()
 	if (GameState) {
 		DisplayedMap = GameState->GetMapImage();
 		DisplayedMapName = GameState->GetMapName();
-		DisplayedMapTime = FText::FromString(FString::Printf(TEXT("%d min"),GameState->GetTime()));
+		DisplayedMapTime = GameState->GetTimeAsText();
 	}
 }
 
@@ -83,7 +83,7 @@ void UGameSettings::SelectTimeByTimeID(int NewTimeID)
 
 	GetGameState()->SetTimeID(NewTimeID);
 
-	DisplayedMapTime = FText::FromString(FString::Printf(TEXT("%d min"), GameState->GetTime()));
+	DisplayedMapTime = GameState->GetTimeAsText();
 }
 
 void UGameSettings::UpdateGameSettings()
