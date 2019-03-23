@@ -40,13 +40,13 @@ public:
 
 	FORCEINLINE TArray<FText> GetAllMapNames() const { return AllMapNames; }
 
-	FORCEINLINE TArray<FText> GetAllTimes() const { return AllTimes; }
+	FORCEINLINE TArray<int> GetAllTimes() const { return AllTimes; }
 
 	FORCEINLINE UTexture2D* GetMapImage() const { return AllMapImages[MapID]; }
 
 	FORCEINLINE FText GetMapName() const { return AllMapNames[MapID]; }
 
-	FORCEINLINE FText GetTime() const { return AllTimes[TimeID]; }
+	FORCEINLINE int GetTime() const { return AllTimes[TimeID]; }
 
 	FORCEINLINE TArray<UTexture2D*> GetAllCharacterImages() const { return AllCharacterImages; }
 
@@ -78,7 +78,7 @@ private:
 		TArray<FText> AllMapNames;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "LobbyGS|Maps")
-		TArray<FText> AllTimes;
+		TArray<int> AllTimes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "LobbyGS|Images|Characters")
 		TArray<UTexture2D*> AllCharacterImages;

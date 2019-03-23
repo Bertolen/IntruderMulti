@@ -34,7 +34,7 @@ public:
 		virtual void GotCaught(class AGuard* Catcher);
 
 	UFUNCTION(Server, Reliable, WithValidation)
-		void RespawnPlayer();
+		void RespawnCharacter();
 
 	/////////////////////////////
 	// UsableInterface

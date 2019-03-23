@@ -169,17 +169,17 @@ void AThief::GotCaught_Implementation(class AGuard* Catcher)
 	OnDeath();
 
 	// Set the time to respawn
-	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AThief::RespawnPlayer, RespawnTime);
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AThief::RespawnCharacter, RespawnTime);
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("GotCaught_Implementation - End"));
 }
 
-bool AThief::RespawnPlayer_Validate()
+bool AThief::RespawnCharacter_Validate()
 {
 	return true;
 }
 
-void AThief::RespawnPlayer_Implementation()
+void AThief::RespawnCharacter_Implementation()
 {
 	AGameplayPC * GameplayPC = Cast<AGameplayPC>(GetController());
 	if (GameplayPC) {

@@ -34,6 +34,9 @@ public:
 	int MaxPlayers;
 
 	UPROPERTY(Replicated, BlueprintReadOnly)
+	int GameTime;
+
+	UPROPERTY(Replicated, BlueprintReadOnly)
 	FText ServerName;
 
 	UPROPERTY(BlueprintReadWrite)

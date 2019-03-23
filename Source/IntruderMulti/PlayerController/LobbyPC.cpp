@@ -33,19 +33,19 @@ void ALobbyPC::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifet
 
 void ALobbyPC::SetupInputComponent()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupInputComponent - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.SetupInputComponent - Begin"));
 	
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("ToggleDisplayMenus", IE_Pressed, this, &ALobbyPC::ToggleDisplay);
 	InputComponent->BindAction("TypeChatMessage", IE_Pressed, this, &ALobbyPC::TypeChatMessage);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupInputComponent - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.SetupInputComponent - End"));
 }
 
 void ALobbyPC::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("EndPlay - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.EndPlay - Begin"));
 	
 	Super::EndPlay(EndPlayReason);
 
@@ -59,35 +59,35 @@ void ALobbyPC::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 
 	GameInstance->DestroySessionCaller(this);
-	UE_LOG(IntruderDebug, Verbose, TEXT("EndPlay - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.EndPlay - End"));
 }
 
 void ALobbyPC::AssignPlayer(TSubclassOf<ACharacter> NewCharacter, UTexture2D * NewCharacterImage)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("AssignPlayer - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.AssignPlayer - Begin"));
 
 	PlayerSettings.MyPlayerCharacter = NewCharacter;
 	PlayerSettings.MyPlayerCharacterImage = NewCharacterImage;
 
 	CallUpdate(PlayerSettings, false);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("AssignPlayer - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.AssignPlayer - End"));
 }
 
 void ALobbyPC::SaveGameCheck()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("SaveGameCheck - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.SaveGameCheck - Begin"));
 
 	if (UGameplayStatics::DoesSaveGameExist(PlayerSettingsSave, 0)) {
 		LoadGame();
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("SaveGameCheck - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.SaveGameCheck - End"));
 }
 
 void ALobbyPC::LoadGame()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("LoadGame - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.LoadGame - Begin"));
 
 	UPlayerSaveGame* SaveGame = Cast<UPlayerSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerSettingsSave, 0));
 	if (!SaveGame) {
@@ -100,44 +100,44 @@ void ALobbyPC::LoadGame()
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("Loaded save game for player %s"), *PlayerSettings.MyPlayerName);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("LoadGame - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.LoadGame - End"));
 }
 
 void ALobbyPC::ToggleDisplay()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.ToggleDisplay - Begin"));
 
 	LobbyMenuWB->ToggleDisplay();
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("ToggleDisplay - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.ToggleDisplay - End"));
 }
 
 void ALobbyPC::TypeChatMessage()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.TypeChatMessage - Begin"));
 
 	if (LobbyMenuWB && LobbyMenuWB->GetChatWindowWB()) {
 		LobbyMenuWB->GetChatWindowWB()->StartTyping(false);
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.TypeChatMessage - End"));
 }
 
 ////////////// Clients Functions
 
 void ALobbyPC::InitialSetup_Implementation(const FText & ServerName)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("InitialSetup_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.InitialSetup_Implementation - Begin"));
 
 	SaveGameCheck();
 	CallUpdate(PlayerSettings, true);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("InitialSetup_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.InitialSetup_Implementation - End"));
 }
 
 void ALobbyPC::SetupLobbyMenu_Implementation(const FText & ServerName)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupLobbyMenu_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.SetupLobbyMenu_Implementation - Begin"));
 
 	bShowMouseCursor = true;
 
@@ -159,12 +159,12 @@ void ALobbyPC::SetupLobbyMenu_Implementation(const FText & ServerName)
 		SetInputMode(InputMode);
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupLobbyMenu_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.SetupLobbyMenu_Implementation - End"));
 }
 
 void ALobbyPC::AddPlayerInfo_Implementation(const TArray<FPlayerInfo> & ConnectedPlayersInfo)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("AddPlayerInfo_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.AddPlayerInfo_Implementation - Begin"));
 	
 	AllConnectedPlayers = ConnectedPlayersInfo;
 	
@@ -179,12 +179,12 @@ void ALobbyPC::AddPlayerInfo_Implementation(const TArray<FPlayerInfo> & Connecte
 		LobbyMenuWB->UpdatePlayerWindow(AllConnectedPlayers[i]);
 	}
 	
-	UE_LOG(IntruderDebug, Verbose, TEXT("AddPlayerInfo_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.AddPlayerInfo_Implementation - End"));
 }
 
 void ALobbyPC::UpdateLobbySettings_Implementation()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateLobbySettings_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateLobbySettings_Implementation - Begin"));
 
 	ALobbyGS * LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
 	if (!LobbyGS) {
@@ -194,14 +194,22 @@ void ALobbyPC::UpdateLobbySettings_Implementation()
 
 	LobbyMenuWB->MapImage = LobbyGS->GetMapImage();
 	LobbyMenuWB->MapName = LobbyGS->GetMapName();
-	LobbyMenuWB->MapTime = LobbyGS->GetTime();
+	LobbyMenuWB->MapTime = FText::FromString(FString::Printf(TEXT("%d min"), LobbyGS->GetTime()));
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateLobbySettings_Implementation - End"));
+	// gives the game instance the map time so we can then pass it to the gameplay gamemode
+	UGameInfoInstance * GameInstance = Cast<UGameInfoInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (!GameInstance) {
+		return;
+	}
+
+	GameInstance->GameTime = LobbyGS->GetTime();
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateLobbySettings_Implementation - End"));
 }
 
 void ALobbyPC::ShowLoadingScreen_Implementation()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("ShowLoadingScreen_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.ShowLoadingScreen_Implementation - Begin"));
 
 	LobbyMenuWB->RemoveFromParent();
 
@@ -210,12 +218,12 @@ void ALobbyPC::ShowLoadingScreen_Implementation()
 		CreateWidget<UUserWidget>(GetWorld(), LoadingScreenClass)->AddToViewport();
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("ShowLoadingScreen_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.ShowLoadingScreen_Implementation - End"));
 }
 
 void ALobbyPC::UpdateNumberOfPlayers_Implementation(int CurrentPlayers, int MaxPlayers)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateNumberOfPlayers_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateNumberOfPlayers_Implementation - Begin"));
 
 	if (!LobbyMenuWB) {
 		return;
@@ -223,12 +231,12 @@ void ALobbyPC::UpdateNumberOfPlayers_Implementation(int CurrentPlayers, int MaxP
 
 	LobbyMenuWB->PlayersDisplay = FText::FromString(FString::FromInt(CurrentPlayers) + " of " + FString::FromInt(MaxPlayers));
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateNumberOfPlayers_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateNumberOfPlayers_Implementation - End"));
 }
 
 void ALobbyPC::Kicked_Implementation()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("Kicked_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.Kicked_Implementation - Begin"));
 
 	UGameInfoInstance * GameInstance = Cast<UGameInfoInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (!GameInstance) {
@@ -239,12 +247,12 @@ void ALobbyPC::Kicked_Implementation()
 
 	UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("Kicked_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.Kicked_Implementation - End"));
 }
 
 void ALobbyPC::UpdateTakenCharacters_Implementation()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateTakenCharacters_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateTakenCharacters_Implementation - Begin"));
 	
 	if (!LobbyMenuWB) {
 		return;
@@ -252,12 +260,12 @@ void ALobbyPC::UpdateTakenCharacters_Implementation()
 
 	LobbyMenuWB->GetCharacterSelectWB()->UpdateEnabledButtons();
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateTakenCharacters_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateTakenCharacters_Implementation - End"));
 }
 
 void ALobbyPC::UpdateChat_Implementation(const FText & Sender, const FText & Text)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateChat_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateChat_Implementation - Begin"));
 
 	if (!LobbyMenuWB) {
 		return;
@@ -265,7 +273,7 @@ void ALobbyPC::UpdateChat_Implementation(const FText & Sender, const FText & Tex
 
 	LobbyMenuWB->GetChatWindowWB()->UpdateChatWindow(Sender, Text);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateChat_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.UpdateChat_Implementation - End"));
 }
 
 ////////////// Server Functions
@@ -277,7 +285,7 @@ bool ALobbyPC::CallUpdate_Validate(FPlayerInfo PlayerInfo, bool ChangedStatus)
 
 void ALobbyPC::CallUpdate_Implementation(FPlayerInfo PlayerInfo, bool ChangedStatus)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("CallUpdate_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.CallUpdate_Implementation - Begin"));
 
 	PlayerSettings = PlayerInfo;
 
@@ -289,7 +297,7 @@ void ALobbyPC::CallUpdate_Implementation(FPlayerInfo PlayerInfo, bool ChangedSta
 	LobbyGM->SwapCharacters(this, PlayerSettings.MyPlayerCharacter, ChangedStatus);
 	LobbyGM->EveryoneUpdate();
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("CallUpdate_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.CallUpdate_Implementation - End"));
 }
 
 bool ALobbyPC::AssignSelectedCharacter_Validate(int CharacterID)
@@ -299,7 +307,7 @@ bool ALobbyPC::AssignSelectedCharacter_Validate(int CharacterID)
 
 void ALobbyPC::AssignSelectedCharacter_Implementation(int CharacterID)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("AssignSelectedCharacter_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.AssignSelectedCharacter_Implementation - Begin"));
 
 	ALobbyGS* LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
 	if (!LobbyGS) {
@@ -317,7 +325,7 @@ void ALobbyPC::AssignSelectedCharacter_Implementation(int CharacterID)
 
 	CharacterCheck();
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("AssignSelectedCharacter_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.AssignSelectedCharacter_Implementation - End"));
 }
 
 bool ALobbyPC::GetChatMessage_Validate(const FText & TextToSend)
@@ -327,7 +335,7 @@ bool ALobbyPC::GetChatMessage_Validate(const FText & TextToSend)
 
 void ALobbyPC::GetChatMessage_Implementation(const FText & TextToSend)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("GetChatMessage_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.GetChatMessage_Implementation - Begin"));
 
 	SenderText = TextToSend;
 	SenderName = FText::FromString(PlayerSettings.MyPlayerName);
@@ -347,7 +355,7 @@ void ALobbyPC::GetChatMessage_Implementation(const FText & TextToSend)
 		LobbyPC->UpdateChat(SenderName, SenderText);
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("GetChatMessage_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.GetChatMessage_Implementation - End"));
 }
 
 bool ALobbyPC::CharacterCheck_Validate()
@@ -357,7 +365,7 @@ bool ALobbyPC::CharacterCheck_Validate()
 
 void ALobbyPC::CharacterCheck_Implementation()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("CharacterCheck - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.CharacterCheck - Begin"));
 
 	ALobbyGS * LobbyGS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
 	if (!LobbyGS) {
@@ -382,5 +390,5 @@ void ALobbyPC::CharacterCheck_Implementation()
 
 	AssignPlayer(LobbyGM->Characters[SelectedCharacter], CharacterImage);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("CharacterCheck - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("ALobbyPC.CharacterCheck - End"));
 }

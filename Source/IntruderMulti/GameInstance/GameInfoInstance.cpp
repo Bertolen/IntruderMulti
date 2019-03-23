@@ -16,6 +16,7 @@ void UGameInfoInstance::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > &
 UGameInfoInstance::UGameInfoInstance(const FObjectInitializer & ObjectInitializer)
 	:Super(ObjectInitializer)
 {
+	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor UGameInfoInstance - Begin"));
 	/** Bind function for CREATING a Session */
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &UGameInfoInstance::OnCreateSessionComplete);
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &UGameInfoInstance::OnStartOnlineGameComplete);
@@ -32,6 +33,17 @@ UGameInfoInstance::UGameInfoInstance(const FObjectInitializer & ObjectInitialize
 	// Default values
 	PlayerSettingsSave = "PlayerSettingsSave";
 	CreatedSaveFile = false;
+
+	// Sets the game to be displayed on a 1280x720 window.
+#if (UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	UGameUserSettings* GameSettings = UGameUserSettings::GetGameUserSettings();
+	if (GameSettings) {
+		GameSettings->SetScreenResolution(FIntPoint(1280, 720));
+		GameSettings->SetFullscreenMode(EWindowMode::Windowed);
+		GameSettings->ApplyResolutionSettings(false);
+	}
+#endif // (UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	UE_LOG(IntruderDebug, Verbose, TEXT("Constructor UGameInfoInstance - End"));
 }
 
 void UGameInfoInstance::Init()

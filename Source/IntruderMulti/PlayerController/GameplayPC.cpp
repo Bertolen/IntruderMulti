@@ -24,7 +24,7 @@ void AGameplayPC::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLi
 
 void AGameplayPC::BeginPlay()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("BeginPlay - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.BeginPlay - Begin"));
 
 	Super::BeginPlay();
 
@@ -37,18 +37,18 @@ void AGameplayPC::BeginPlay()
 		SetInputMode(InputMode);
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("BeginPlay - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.BeginPlay - End"));
 }
 
 void AGameplayPC::TypeChatMessage()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.TypeChatMessage - Begin"));
 
 	if (GameplayMenuWB && GameplayMenuWB->GetChatWindow()) {
 		GameplayMenuWB->GetChatWindow()->StartTyping(true);
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("TypeChatMessage - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.TypeChatMessage - End"));
 }
 
 bool AGameplayPC::PassCharacterInfoToServer_Validate()
@@ -58,7 +58,7 @@ bool AGameplayPC::PassCharacterInfoToServer_Validate()
 
 void AGameplayPC::PassCharacterInfoToServer_Implementation()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("PassCharacterInfoToServer_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.PassCharacterInfoToServer_Implementation - Begin"));
 
 	SenderName = FText::FromString(PlayerSettings.MyPlayerName);
 
@@ -75,7 +75,7 @@ void AGameplayPC::PassCharacterInfoToServer_Implementation()
 
 	SetupMenuWindow();
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("PassCharacterInfoToServer_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.PassCharacterInfoToServer_Implementation - End"));
 }
 
 bool AGameplayPC::GetChatMessage_Validate(const FText & Text)
@@ -85,7 +85,7 @@ bool AGameplayPC::GetChatMessage_Validate(const FText & Text)
 
 void AGameplayPC::GetChatMessage_Implementation(const FText &  Text)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("GetChatMessage_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.GetChatMessage_Implementation - Begin"));
 
 	SenderText = Text;
 
@@ -104,12 +104,12 @@ void AGameplayPC::GetChatMessage_Implementation(const FText &  Text)
 		GameplayPC->UpdateChat(SenderName, SenderText);
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("GetChatMessage_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.GetChatMessage_Implementation - End"));
 }
 
 void AGameplayPC::SetupMenuWindow_Implementation()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupChatWindow_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.SetupChatWindow_Implementation - Begin"));
 
 	// TODO : use the gameplay menu to display the gameplay chat
 	if (GameplayMenuClass != nullptr) { // check if our widget class exists, else we'll crash
@@ -122,12 +122,12 @@ void AGameplayPC::SetupMenuWindow_Implementation()
 		GameplayMenuWB->Hide();
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("SetupChatWindow_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.SetupChatWindow_Implementation - End"));
 }
 
 void AGameplayPC::ShowMenuWindow()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("ShowMenuWindow - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.ShowMenuWindow - Begin"));
 
 	if (GameplayMenuClass != nullptr) { // check if our widget class exists, else we'll crash
 		if (GameplayMenuWB == nullptr) { // init the widget
@@ -139,12 +139,12 @@ void AGameplayPC::ShowMenuWindow()
 		GameplayMenuWB->ShowMenu();
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("ShowMenuWindow - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.ShowMenuWindow - End"));
 }
 
 void AGameplayPC::UpdateChat_Implementation(const FText & _SenderName, const FText & _SenderText)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateChat_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.UpdateChat_Implementation - Begin"));
 
 	if (GameplayMenuWB && GameplayMenuWB->GetChatWindow()) {
 		GameplayMenuWB->GetChatWindow()->UpdateChatWindow(_SenderName, _SenderText);
@@ -153,7 +153,7 @@ void AGameplayPC::UpdateChat_Implementation(const FText & _SenderName, const FTe
 		UE_LOG(IntruderDebug, Warning, TEXT("Gameplay Chat Window not found. Messages won't appear on screen."));
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("UpdateChat_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.UpdateChat_Implementation - End"));
 }
 
 bool AGameplayPC::InitFromLobbyPC_Validate(ALobbyPC* LobbyPC)
@@ -163,16 +163,16 @@ bool AGameplayPC::InitFromLobbyPC_Validate(ALobbyPC* LobbyPC)
 
 void AGameplayPC::InitFromLobbyPC_Implementation(ALobbyPC* LobbyPC)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("InitFromLobbyPC - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.InitFromLobbyPC - Begin"));
 
 	PlayerSettings = LobbyPC->PlayerSettings;
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("InitFromLobbyPC - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.InitFromLobbyPC - End"));
 }
 
 void AGameplayPC::DisplayEndGameWidget_Implementation(const FString & WinText)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayEndGameWidget_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.DisplayEndGameWidget_Implementation - Begin"));
 
 	GameplayMenuWB->ShowEndGameWindow(WinText);
 
@@ -183,5 +183,5 @@ void AGameplayPC::DisplayEndGameWidget_Implementation(const FString & WinText)
 
 	bShowMouseCursor = true;
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayEndGameWidget_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.DisplayEndGameWidget_Implementation - End"));
 }

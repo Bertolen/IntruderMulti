@@ -18,7 +18,7 @@ void AGameplayGM::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLi
 
 void AGameplayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("SwapPlayerControllers - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.SwapPlayerControllers - Begin"));
 
 	Super::SwapPlayerControllers(OldPC, NewPC);
 
@@ -43,12 +43,12 @@ void AGameplayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerContro
 		NbRemainingThieves++;
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("SwapPlayerControllers - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.SwapPlayerControllers - End"));
 }
 
 void AGameplayGM::Logout(AController* Exiting)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("Logout - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.Logout - Begin"));
 
 	Super::Logout(Exiting);
 
@@ -64,7 +64,7 @@ void AGameplayGM::Logout(AController* Exiting)
 
 	GameInstance->DestroySessionCaller(GameplayPC);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("Logout - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.Logout - End"));
 }
 
 bool AGameplayGM::RespawnPlayer_Validate(APlayerController* PlayerController, TSubclassOf<ACharacter> CharacterClass)
@@ -74,7 +74,7 @@ bool AGameplayGM::RespawnPlayer_Validate(APlayerController* PlayerController, TS
 
 void AGameplayGM::RespawnPlayer_Implementation(APlayerController* PlayerController, TSubclassOf<ACharacter> CharacterClass)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("RespawnPlayer - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.RespawnPlayer - Begin"));
 
 	// Destroy the previous pawn, if there's one
 	if (PlayerController->GetPawn()) {
@@ -141,34 +141,38 @@ void AGameplayGM::RespawnPlayer_Implementation(APlayerController* PlayerControll
 	// Assing the new pawn to the player controller
 	PlayerController->Possess(NewCharacter);
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("RespawnPlayer - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.RespawnPlayer - End"));
 }
 
 void AGameplayGM::ThievesWin()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.ThievesWin - Begin"));
 
 	DisplayWinText("The relic has been stolen!");
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("ThievesWin - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.ThievesWin - End"));
 }
 
 void AGameplayGM::GuardsWin()
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("GuardsWin - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.GuardsWin - Begin"));
 
 	DisplayWinText("All thieves have been captured!");
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("GuardsWin - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.GuardsWin - End"));
 }
 
 void AGameplayGM::OneLessThief()
 {
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.OneLessThief - Begin"));
+
 	NbRemainingThieves--;
 
 	if (!NbRemainingThieves) {
 		GuardsWin();
 	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.OneLessThief - End"));
 }
 
 bool AGameplayGM::DisplayWinText_Validate(const FString & WinText)
@@ -178,7 +182,7 @@ bool AGameplayGM::DisplayWinText_Validate(const FString & WinText)
 
 void AGameplayGM::DisplayWinText_Implementation(const FString & WinText)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayWinText_Implementation - Begin"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.DisplayWinText_Implementation - Begin"));
 
 	for (int i = 0; i < AllPlayerControllers.Num(); i++)
 	{
@@ -191,5 +195,5 @@ void AGameplayGM::DisplayWinText_Implementation(const FString & WinText)
 		GameplayPC->DisplayEndGameWidget(WinText);
 	}
 
-	UE_LOG(IntruderDebug, Verbose, TEXT("DisplayWinText_Implementation - End"));
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.DisplayWinText_Implementation - End"));
 }
