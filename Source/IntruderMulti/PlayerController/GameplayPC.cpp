@@ -5,6 +5,7 @@
 #include "Runtime/UMG/Public/Blueprint/WidgetLayoutLibrary.h"
 #include "IntruderMulti/GameMode/GameplayGM.h"
 #include "IntruderMulti/UI/Gameplay/GameplayMenu.h"
+#include "IntruderMulti/UI/Gameplay/GameplayHUD.h"
 #include "IntruderMulti/UI/Gameplay/EndGameWindow.h"
 #include "IntruderMulti/PlayerController/LobbyPC.h"
 
@@ -29,12 +30,26 @@ void AGameplayPC::BeginPlay()
 	Super::BeginPlay();
 
 	if (IsLocalController()) {
+		// clean up the display
 		UWidgetLayoutLibrary::RemoveAllWidgets(this);
 
+		// init the character
 		PassCharacterInfoToServer();
 
+		// Set up the input mode (hide cursor and all)
 		FInputModeGameOnly InputMode;
 		SetInputMode(InputMode);
+
+		// Display the HUD
+		if (GameplayHUDClass != nullptr) { // check if our widget class exists, else we'll crash
+			if (GameplayHUDWB == nullptr) { // init the widget
+				GameplayHUDWB = CreateWidget<UGameplayHUD>(GetWorld(), GameplayHUDClass);
+				GameplayHUDWB->AddToViewport();
+			}
+
+			// Show our widget
+			GameplayHUDWB->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.BeginPlay - End"));
@@ -184,4 +199,15 @@ void AGameplayPC::DisplayEndGameWidget_Implementation(const FString & WinText)
 	bShowMouseCursor = true;
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.DisplayEndGameWidget_Implementation - End"));
+}
+
+void AGameplayPC::PassPlayTime_Implementation(const float ServerPlayTime)
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.PassRemainingTime_Implementation - Begin"));
+
+	if (GameplayHUDWB) { 
+		GameplayHUDWB->UpdateRemainingTime(ServerPlayTime);
+	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayPC.PassRemainingTime_Implementation - Begin"));
 }

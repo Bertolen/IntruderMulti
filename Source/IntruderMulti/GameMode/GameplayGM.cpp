@@ -100,7 +100,17 @@ void AGameplayGM::Tick(float DeltaTime)
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("GameTime = %d, PlayTime = %f"), GameInstance->GameTime, GetPlayTime()));
+	// Gives to all the clients the time spent playing
+	for (int i = 0; i < AllPlayerControllers.Num(); i++)
+	{
+		AGameplayPC* GameplayPC = Cast<AGameplayPC>(AllPlayerControllers[i]);
+		if (!GameplayPC) {
+			UE_LOG(IntruderDebug, Error, TEXT("Failed to cast player controller. Won't leave game properly."));
+			return;
+		}
+
+		GameplayPC->PassPlayTime(GetPlayTime());
+	}
 
 	// check if the time is up
 	if (GameInstance->GameTime * 60 <= GetPlayTime()) {
@@ -140,7 +150,6 @@ void AGameplayGM::RespawnPlayer_Implementation(APlayerController* PlayerControll
 		APlayerStart * PlayerStart = Cast<APlayerStart>(SpawnPoints[i]);
 		if (!PlayerStart) {
 			UE_LOG(IntruderDebug, Error, TEXT("SpawnPoint is not a PlayerStart object."));
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, "SpawnPoint is not a PlayerStart object.");
 			continue;
 		}
 
@@ -167,7 +176,6 @@ void AGameplayGM::RespawnPlayer_Implementation(APlayerController* PlayerControll
 	}
 	else {
 		UE_LOG(IntruderDebug, Error, TEXT("No spawn points left. Spawning at origin by default."));
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "No spawn points left. Spawning at origin by default.");
 		SpawnTransform = FTransform::Identity;
 	}
 

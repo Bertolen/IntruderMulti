@@ -22,7 +22,7 @@ void AGameplayGS::BeginPlay()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGS.BeginPlay - Begin"));
 
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("AGameplayGS.BeginPlay")));
+	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("AGameplayGS.BeginPlay")));
 
 	Super::BeginPlay();
 
@@ -36,8 +36,6 @@ void AGameplayGS::UpdateServerTimeSeconds()
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGS.UpdateServerTimeSeconds - Begin"));
 	
 	Super::UpdateServerTimeSeconds();
-
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("PlayTime %f"), GetPlayTime()));
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGS.UpdateServerTimeSeconds - End"));
 }

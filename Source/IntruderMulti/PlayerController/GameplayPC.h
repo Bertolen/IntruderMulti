@@ -45,6 +45,9 @@ public:
 	UFUNCTION(Client, Reliable)
 		void DisplayEndGameWidget(const FString & WinText);
 
+	UFUNCTION(Client, Reliable)
+		void PassPlayTime(const float ServerPlayTime);
+
 protected:
 	UPROPERTY()
 		FString PlayerSettingsSave;
@@ -61,6 +64,12 @@ protected:
 	UPROPERTY()
 		class UGameplayMenu* GameplayMenuWB;
 
+	UPROPERTY()
+		class UGameplayHUD* GameplayHUDWB;
+
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
 		TSubclassOf<class UGameplayMenu> GameplayMenuClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
+		TSubclassOf<class UGameplayHUD> GameplayHUDClass;
 };

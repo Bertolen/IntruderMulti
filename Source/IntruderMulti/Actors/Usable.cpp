@@ -64,11 +64,7 @@ bool AUsable::CanBeUsed(ACharacter* User)
 // This function will be called when the user uses the object
 void AUsable::OnUsed(ACharacter* Newuser)
 {
-	UE_LOG(IntruderDebug, Verbose, TEXT("OnUsed - Begin"));
 
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Usable object used")));
-
-	UE_LOG(IntruderDebug, Verbose, TEXT("OnUsed - End"));
 }
 
 ////// Setters
