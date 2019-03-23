@@ -182,10 +182,10 @@ void ALobbyGM::LaunchTheGame()
 	switch (LobbyGS->GetMapID())
 	{
 	case 0:
-		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), FString("servertravel /Game/Maps/Arena01"), UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), FString("servertravel /Game/IntruderMulti/Maps/Arena01"), UGameplayStatics::GetPlayerController(GetWorld(), 0));;
 		break;
 	case 1:
-		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), FString("servertravel /Game/Maps/Consulate"), UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), FString("servertravel /Game/IntruderMulti/Maps/Consulate"), UGameplayStatics::GetPlayerController(GetWorld(), 0));
 		break;
 	default:
 		break;

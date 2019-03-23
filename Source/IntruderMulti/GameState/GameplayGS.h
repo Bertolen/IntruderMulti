@@ -19,4 +19,14 @@ public:
 	
 	//Gives clients the chance to do something when time gets updates
 	virtual void UpdateServerTimeSeconds();
+
+	FORCEINLINE float GetPlayTime() { return ReplicatedWorldTimeSeconds - BeginPlayTime;  }
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+protected:
+	UPROPERTY(Replicated, BlueprintReadOnly)
+		float BeginPlayTime;
 };

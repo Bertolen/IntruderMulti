@@ -9,6 +9,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
+AGameplayGM::AGameplayGM(const FObjectInitializer & ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void AGameplayGM::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -46,6 +53,22 @@ void AGameplayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerContro
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.SwapPlayerControllers - End"));
 }
 
+void AGameplayGM::BeginPlay()
+{
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.BeginPlay - Begin"));
+
+	Super::BeginPlay();
+
+	// record the world time at this moment
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		BeginPlayTime = World->GetTimeSeconds();
+	}
+
+	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.BeginPlay - End"));
+}
+
 void AGameplayGM::Logout(AController* Exiting)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.Logout - Begin"));
@@ -65,6 +88,25 @@ void AGameplayGM::Logout(AController* Exiting)
 	GameInstance->DestroySessionCaller(GameplayPC);
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.Logout - End"));
+}
+
+void AGameplayGM::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// retrieve the game instance
+	UGameInfoInstance * GameInstance = Cast<UGameInfoInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (!GameInstance) {
+		return;
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("GameTime = %d, PlayTime = %f"), GameInstance->GameTime, GetPlayTime()));
+
+	// check if the time is up
+	if (GameInstance->GameTime * 60 <= GetPlayTime()) {
+		// if time is up then the guards have won
+		GuardsWin();
+	}
 }
 
 bool AGameplayGM::RespawnPlayer_Validate(APlayerController* PlayerController, TSubclassOf<ACharacter> CharacterClass)
@@ -153,11 +195,11 @@ void AGameplayGM::ThievesWin()
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.ThievesWin - End"));
 }
 
-void AGameplayGM::GuardsWin()
+void AGameplayGM::GuardsWin(FString DisplayText)
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.GuardsWin - Begin"));
 
-	DisplayWinText("All thieves have been captured!");
+	DisplayWinText(DisplayText);
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.GuardsWin - End"));
 }
@@ -196,4 +238,17 @@ void AGameplayGM::DisplayWinText_Implementation(const FString & WinText)
 	}
 
 	UE_LOG(IntruderDebug, Verbose, TEXT("AGameplayGM.DisplayWinText_Implementation - End"));
+}
+
+///////// GETTERS
+
+float AGameplayGM::GetPlayTime()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		 return World->GetTimeSeconds() - BeginPlayTime;
+	}
+
+	return 0.0f;
 }
