@@ -3,7 +3,6 @@
 #include "GameplayMenu.h"
 #include "Kismet/GameplayStatics.h"
 #include "IntruderMulti/GameInstance/GameInfoInstance.h"
-#include "IntruderMulti/UI/Gameplay/EndGameWindow.h"
 #include "Components/Border.h"
 
 void UGameplayMenu::LeaveGame()
@@ -26,13 +25,11 @@ void UGameplayMenu::Hide()
 {
 	UE_LOG(IntruderDebug, Verbose, TEXT("Hide - Begin"));
 
-	if (MenuWB) {
-		MenuWB->SetVisibility(ESlateVisibility::Hidden);
-	}
+	this->SetVisibility(ESlateVisibility::Hidden);
 
-	if (EndGameWindowWB) {
+	/*if (EndGameWindowWB) {
 		EndGameWindowWB->SetVisibility(ESlateVisibility::Hidden);
-	}
+	}*/
 
 	// Hide the cursor and binds the camera to be controlled by mouse movement again
 	FInputModeGameOnly InputMode;
@@ -44,9 +41,13 @@ void UGameplayMenu::Hide()
 
 void UGameplayMenu::ShowMenu()
 {
-	if (MenuWB) {
+	/*if (MenuWB) {
 		MenuWB->SetVisibility(ESlateVisibility::Visible);
-	}
+		MenuWB->SetUserFocus(GetOwningPlayer());
+	}*/
+
+	this->SetVisibility(ESlateVisibility::Visible);
+	this->SetUserFocus(GetOwningPlayer());
 
 	// The mouse movement will no longer control the camera
 	FInputModeGameAndUI InputMode;
@@ -63,7 +64,7 @@ void UGameplayMenu::ShowMenu()
 	// Show the cursor
 	GetOwningPlayer()->bShowMouseCursor = true;
 }
-
+/*
 void UGameplayMenu::ShowEndGameWindow(FString WinText)
 {
 	if (EndGameWindowWB) {
@@ -71,4 +72,4 @@ void UGameplayMenu::ShowEndGameWindow(FString WinText)
 		EndGameWindowWB->SetWinText(WinText);
 		EndGameWindowWB->SetUserFocus(GetOwningPlayer());
 	}
-}
+}*/

@@ -31,7 +31,7 @@ public:
 		void GetChatMessage(const FText & Text);
 
 	UFUNCTION(Client, Reliable)
-		void SetupMenuWindow();
+		void SetupHUD();
 
 	UFUNCTION()
 		void ShowMenuWindow();
@@ -61,14 +61,14 @@ protected:
 	UPROPERTY(Replicated)
 		FText SenderName;
 
-	UPROPERTY()
-		class UGameplayMenu* GameplayMenuWB;
+	/*UPROPERTY()
+		class UGameplayMenu* GameplayMenuWB;*/
 
 	UPROPERTY()
 		class UGameplayHUD* GameplayHUDWB;
 
-	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
-		TSubclassOf<class UGameplayMenu> GameplayMenuClass;
+	/*UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
+		TSubclassOf<class UGameplayMenu> GameplayMenuClass;*/
 
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayPC|WidgetClasses", meta = (AlowPrivateAccess = "true"))
 		TSubclassOf<class UGameplayHUD> GameplayHUDClass;
