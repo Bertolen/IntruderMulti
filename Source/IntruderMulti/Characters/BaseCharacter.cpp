@@ -127,7 +127,6 @@ void ABaseCharacter::UpdateFocusLine()
 
 																	// Perform trace to retrieve hit info
 	FCollisionQueryParams TraceParams(FName(TEXT("WeaponTrace")), true, this);
-	TraceParams.bTraceAsyncScene = true;
 	TraceParams.bReturnPhysicalMaterial = true;
 	FHitResult Hit(ForceInit);
 
